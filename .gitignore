@@ -1,0 +1,14 @@
+﻿node_modules/
+hts-cache/
+hts-log.txt
+.DS_Store
+Thumbs.db
+*.log
+.env
+.env.*
+_probe*
+_qa*
+_shot*
+_gen*
+*.cjs
+!portal/**/*.cjs

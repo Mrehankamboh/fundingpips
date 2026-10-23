@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Refer a Friend | FundingPips</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/portal.css?v=35" />
+</head>
+<body>
+  <div class="app-shell">
+    <div class="app-banner" role="banner">New to FundingPips? Save 20% today with code FP</div>
+    <div class="app-body">
+      <aside class="app-rail" id="app-rail"></aside>
+      <div class="app-main">
+        <header class="app-topbar" id="app-topbar"></header>
+        <div class="app-content">
+          <div class="refer-layout">
+            <div class="refer-main">
+              <article class="panel refer-card">
+                <div class="refer-top">
+                  <div>
+                    <h2>Refer a Friend <span class="limited">Limited Time</span></h2>
+                    <p>Share your code. Your friend enters it at checkout.</p>
+                  </div>
+                  <div class="code-box"><span>Code</span> <b>N0B0ZSFG</b>
+                    <button type="button" aria-label="Copy code N0B0ZSFG" id="copy-code">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M6 16H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" stroke="currentColor" stroke-width="1.5"/></svg>
+                    </button>
+                  </div>
+                </div>
+                <div class="perk-row">
+                  <div class="perk"><i aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 4v16M7 8.5c1.5-2 8.5-2 10 0-2 1.5-2 3.5-5 3.5S9 13 7 14.5c1.5 2 8.5 2 10 0" stroke="#3b5bfd" stroke-width="1.6" stroke-linecap="round"/></svg></i><div><strong>Friend gets 20% off</strong><span>On their first account purchase</span></div></div>
+                  <div class="perk"><i class="gold" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="9" r="3" stroke="#c2410c" stroke-width="1.6"/><path d="M6.5 18.5c.8-2.4 2.8-3.5 5.5-3.5s4.7 1.1 5.5 3.5" stroke="#c2410c" stroke-width="1.6" stroke-linecap="round"/></svg></i><div><strong>You get 15% off</strong><span>For each of your first 3 friends who buy</span></div></div>
+                </div>
+              </article>
+              <section class="refer-codes">
+                <h2>Your 15% codes</h2>
+                <p>One code per friend, up to 3. Each is single-use and valid for 30 days from when it's earned.</p>
+                <article class="refer-empty">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20.5 13.5 13 21a2 2 0 0 1-2.8 0l-7-7V4h10l7.3 7.3a2 2 0 0 1 0 2.2Z" stroke="#98a2b3" stroke-width="1.5"/><circle cx="8.2" cy="8.2" r="1.1" fill="#98a2b3"/></svg>
+                  <h3>No codes yet</h3>
+                  <p>Codes appear here as you earn them.</p>
+                </article>
+              </section>
+            </div>
+            <aside class="refer-miles">
+              <h2>Milestone rewards</h2>
+              <p>Each milestone is claimed once, as a free account or a coupon.</p>
+              <div class="refer-count">Friends referred <b>0/3</b></div>
+              <div class="mile-tabs">
+                <button type="button" class="on" data-tab="available">Available</button>
+                <button type="button" data-tab="claimed">Claimed</button>
+              </div>
+              <div id="available" class="mile-list">
+                <article class="milestone"><i aria-hidden="true"></i><div><strong>5K 2 Step Pro account or $15</strong><span>3 more friends to unlock</span></div></article>
+                <article class="milestone"><i aria-hidden="true"></i><div><strong>10K 2 Step Pro account or $60</strong><span>15 more friends to unlock</span></div></article>
+                <article class="milestone"><i aria-hidden="true"></i><div><strong>25K 2 Step Pro account or $25</strong><span>20 more friends to unlock</span></div></article>
+                <article class="milestone"><i aria-hidden="true"></i><div><strong>50K 2 Step Pro account or $50</strong><span>30 more friends to unlock</span></div></article>
+                <article class="milestone"><i aria-hidden="true"></i><div><strong>1K Instant account or $100 + custom referral code</strong><span>50 more friends to unlock</span></div></article>
+                <article class="milestone"><i aria-hidden="true"></i><div><strong>200K 2 Step Pro account or $250</strong><span>100 more friends to unlock</span></div></article>
+                <article class="milestone"><i aria-hidden="true"></i><div><strong>10K Instant account or $500</strong><span>200 more friends to unlock</span></div></article>
+              </div>
+              <article class="refer-empty" id="claimed" hidden>
+                <h3>No claimed rewards yet</h3>
+                <p>Claimed milestones show up here.</p>
+              </article>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="js/shell.js?v=6"></script>
+  <script src="js/portal.js?v=7"></script>
+  <script>
+    FPShell.render("Refer a Friend");
+    document.getElementById("copy-code").addEventListener("click", () => navigator.clipboard.writeText("N0B0ZSFG"));
+    document.querySelectorAll(".mile-tabs button").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".mile-tabs button").forEach((b) => b.classList.toggle("on", b === btn));
+        document.getElementById("available").hidden = btn.dataset.tab !== "available";
+        document.getElementById("claimed").hidden = btn.dataset.tab !== "claimed";
+      });
+    });
+  </script>
+</body>
+</html>

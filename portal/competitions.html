@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Competitions | FundingPips</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/portal.css?v=35" />
+</head>
+<body>
+  <div class="app-shell">
+    <div class="app-banner" role="banner">New to FundingPips? Save 20% today with code FP</div>
+    <div class="app-body">
+      <aside class="app-rail" id="app-rail"></aside>
+      <div class="app-main">
+        <header class="app-topbar" id="app-topbar"></header>
+        <div class="app-content">
+          <article class="panel comp-hero">
+            <div class="comp-hero-copy">
+              <p class="comp-kicker">Monthly Competition</p>
+              <h2>October 2026 Monthly Competition</h2>
+              <div class="comp-meta">
+                <span><i class="status go"><i></i></i> Ongoing</span>
+                <span>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 16.5 9 11l3.5 3.5L20 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 7h6v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  matchtrader
+                </span>
+                <span>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM16.5 11.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM4 19.5v-.5a4 4 0 0 1 4-4h2a4 4 0 0 1 4 4v.5M16 15.2a3.5 3.5 0 0 1 3.5 3.5v.8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                  46,483
+                </span>
+              </div>
+              <div class="comp-dates">
+                <div><span>Starts</span><strong>Oct 1, 2026</strong></div>
+                <div><span>Ends</span><strong>Oct 31, 2026</strong></div>
+                <div><span>Ending in</span><strong data-count>08:08:01:58</strong></div>
+              </div>
+              <div class="comp-actions">
+                <a class="btn-navy" href="competition.html">View</a>
+                <button class="btn-ghost" type="button" data-open="prize">Show Prizepool</button>
+                <button class="btn-ghost" type="button" data-open="about">More Info</button>
+              </div>
+            </div>
+            <img class="comp-trophy" src="https://app.fundingpips.com/_next/static/media/trophy-pink.0s0euo-62rbm3.png" alt="Trophy" />
+          </article>
+
+          <div class="comp-tabs" role="tablist">
+            <button type="button" data-tab="joined">Joined</button>
+            <button type="button" class="on" data-tab="fundingpips">Fundingpips</button>
+            <button type="button" data-tab="championships">Championships</button>
+            <button type="button" data-tab="hosted">Hosted</button>
+          </div>
+
+          <div class="comp-row" data-panel="fundingpips"></div>
+          <div class="comp-row" data-panel="championships" hidden></div>
+          <div class="comp-row" data-panel="joined" hidden></div>
+          <div class="comp-row" data-panel="hosted" hidden></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="fp-modal" id="prize" hidden>
+    <div class="fp-dialog" role="dialog" aria-labelledby="prize-title">
+      <button class="x" type="button" aria-label="Close">×</button>
+      <h2 id="prize-title">Prize pool for this competition</h2>
+      <ul>
+        <li>1st place: 100K Evaluation (+$1500)</li>
+        <li>2nd place: 100K Evaluation (+$1200)</li>
+        <li>3rd place: 100K Evaluation (+$1000)</li>
+        <li>4th place: 100K Evaluation</li>
+        <li>5th place: 50K Evaluation</li>
+        <li>6th / 10th: 25K Evaluation</li>
+        <li>11th / 20th: 10K Evaluation</li>
+      </ul>
+      <p><strong>Compensation price:</strong> Thirteen random participants, ranked from 4th place to 1000th place, will receive a cash compensation prize of $100.</p>
+    </div>
+  </div>
+  <div class="fp-modal" id="about" hidden>
+    <div class="fp-dialog" role="dialog" aria-labelledby="about-title">
+      <button class="x" type="button" aria-label="Close">×</button>
+      <h2 id="about-title">About this Competition</h2>
+      <p>FundingPips Trading Competition</p>
+      <p>$5000 in cash and $675,000 worth of Evaluations.</p>
+      <p>The rules for the competition:</p>
+      <ul>
+        <li>- 10% Maximum Loss Limit</li>
+        <li>- 5% Maximum Daily Loss Limit</li>
+        <li>- EAs are not allowed</li>
+        <li>- Taking advantage of unrealistic fills in the demo environment is not allowed.</li>
+        <li>- Only one account per person is permitted.</li>
+      </ul>
+      <p>If one of the rules is breached, you will be disqualified from the competition.</p>
+      <p>We have room for 50,000 participants. FULL = FULL</p>
+      <p><strong>Important Notice:</strong> Please be aware that the website link and your account credentials for competition accounts are different from those used for our evaluation accounts.</p>
+      <p>To access your competition account on Match Trader, please use the following link: <a href="https://mtr-competition.fundingpips.com/dashboard">https://mtr-competition.fundingpips.com/dashboard</a>. This link is also available on your account dashboard under the “Credentials” section.</p>
+      <p>Make sure you are using the correct link and credentials to avoid any access issues.</p>
+    </div>
+  </div>
+  <script src="js/shell.js?v=6"></script>
+  <script src="js/portal.js?v=7"></script>
+  <script>
+    FPShell.render("Competitions");
+    (function () {
+      const tag = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M2.75 11.16V4.75A2 2 0 0 1 4.75 2.75h6.41c.53 0 1.04.21 1.42.59l8.01 8.01a2.12 2.12 0 0 1 0 2.99l-6.41 6.41a2.12 2.12 0 0 1-2.99 0l-8.01-8.01a2 2 0 0 1-.59-1.41Z" stroke="currentColor" stroke-width="1.5"/><circle cx="7.5" cy="7.5" r=".75" fill="currentColor"/></svg>';
+      const users = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM16.5 11.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM4 19.5v-.5a4 4 0 0 1 4-4h2a4 4 0 0 1 4 4v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
+      const chart = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 16.5 9 11l3.5 3.5L20 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      const monthly = [
+        ["October 2026 Monthly Competition", "go", "Ongoing", "46,478", true],
+        ["September 2026 Monthly Competition", "end", "Ended", "50,000"],
+        ["August 2026 Monthly Competition", "end", "Ended", "50,001"],
+        ["July 2026 Monthly Competition", "end", "Ended", "50,000"],
+        ["June 2026 Monthly Competition", "end", "Ended", "50,000"],
+        ["May 2026 Monthly Competition", "end", "Ended", "50,000"],
+        ["April 2026 Monthly Competition", "end", "Ended", "50,000"],
+        ["March 2026 Monthly Competition", "end", "Ended", "50,000"],
+        ["February 2026 Monthly Competition", "end", "Ended", "47,216"],
+        ["January 2026 Monthly Competition", "end", "Ended", "50,000"],
+        ["December 2025 Monthly Competition", "end", "Ended", "50,000"],
+        ["November 2025 Monthly Competition", "end", "Ended", "50,000"],
+        ["October 2025 Monthly Competition", "end", "Ended", "50,000"],
+        ["September 2025 Monthly Competition", "end", "Ended", "50,000"],
+        ["August 2025 Monthly Competition", "end", "Ended", "50,000"],
+        ["July 2025 Monthly Competition", "end", "Ended", "50,000"],
+        ["June 2025 Monthly Competition", "end", "Ended", "46,073"],
+        ["May 2025 Monthly Competition", "end", "Ended", "48,520"],
+        ["April 2025 Monthly Competition", "end", "Ended", "49,674"],
+        ["March 2025 Monthly Competition", "end", "Ended", "43,772"],
+        ["February 2025 Monthly Competition", "end", "Ended", "42,001"],
+        ["January 2025 Monthly Competition", "end", "Ended", "28,553"],
+        ["December 2024 Monthly Competition", "end", "Ended", "39,546"],
+        ["November 2024 Monthly Competition", "end", "Ended", "50,000"],
+        ["October 2024 Competition", "end", "Ended", "50,000"]
+      ];
+      const champs = [["Community Championship January 2025", "end", "Ended", "17,900"]];
+      function card(item) {
+        const [title, kind, label, count, live] = item;
+        return `<article class="panel comp-mini">
+          <time class="comp-count"${live ? " data-count" : ""}>${live ? "08:08:01:58" : "00:00:00"}</time>
+          <h3>${title}</h3>
+          <div class="comp-card-meta">
+            <span><i class="status ${kind}"><i></i></i> ${label}</span>
+            <span>${tag} Free</span>
+            <span>${users} ${count}</span>
+          </div>
+          <div class="comp-foot">
+            <span class="brand"><span>FundingPips</span><span>${chart} matchtrader</span></span>
+            ${live ? '<a href="competition.html">View</a>' : '<button type="button">View</button>'}
+          </div>
+        </article>`;
+      }
+      document.querySelector('[data-panel="fundingpips"]').innerHTML = monthly.map(card).join("");
+      document.querySelector('[data-panel="championships"]').innerHTML = champs.map(card).join("");
+      document.querySelectorAll(".comp-tabs button").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".comp-tabs button").forEach((b) => b.classList.toggle("on", b === btn));
+          document.querySelectorAll("[data-panel]").forEach((panel) => {
+            panel.hidden = panel.dataset.panel !== btn.dataset.tab;
+          });
+        });
+      });
+      const end = Date.parse("2026-10-31T15:00:00.000Z");
+      const pad = (n) => String(n).padStart(2, "0");
+      function tick() {
+        const left = Math.max(0, end - Date.now());
+        const s = Math.floor(left / 1000);
+        const text = [Math.floor(s / 86400), Math.floor((s % 86400) / 3600), Math.floor((s % 3600) / 60), s % 60].map(pad).join(":");
+        document.querySelectorAll("[data-count]").forEach((el) => { el.textContent = text; });
+      }
+      tick();
+      setInterval(tick, 1000);
+      document.querySelectorAll("[data-open]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const modal = document.getElementById(btn.dataset.open);
+          if (modal) modal.hidden = false;
+        });
+      });
+      document.querySelectorAll(".fp-modal").forEach((modal) => {
+        modal.addEventListener("click", (event) => {
+          if (event.target === modal || event.target.closest(".x")) modal.hidden = true;
+        });
+      });
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") document.querySelectorAll(".fp-modal").forEach((modal) => { modal.hidden = true; });
+      });
+    })();
+  </script>
+</body>
+</html>

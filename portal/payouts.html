@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rewards | FundingPips</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/portal.css?v=35" />
+</head>
+<body>
+  <div class="app-shell">
+    <div class="app-banner" role="banner">New to FundingPips? Save 20% today with code FP</div>
+    <div class="app-body">
+      <aside class="app-rail" id="app-rail"></aside>
+      <div class="app-main">
+        <header class="app-topbar" id="app-topbar"></header>
+        <div class="app-content">
+          <div class="rewards-top">
+            <article class="panel center-copy reward-cert">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7.75 15V21.5682C7.75 22.1179 8.32191 22.4809 8.81935 22.2468L11.6807 20.9003C11.8829 20.8051 12.1171 20.8051 12.3193 20.9003L15.1807 22.2468C15.6781 22.4809 16.25 22.1179 16.25 21.5682V15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M19.25 9C19.25 13.0041 16.0041 16.25 12 16.25C7.99594 16.25 4.75 13.0041 4.75 9C4.75 4.99594 7.99594 1.75 12 1.75C16.0041 1.75 19.25 4.99594 19.25 9Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <h2>No Certificate Available</h2>
+              <p>You'll earn your reward certificate once you start receiving rewards.</p>
+              <p class="soft">Keep trading to unlock your achievements!</p>
+            </article>
+            <article class="panel reward-request">
+              <div>
+                <h3>Ready to request your reward?</h3>
+                <p>Please click on the request button then proceed to fill out the required information, our team will reach out to you for further advancements.</p>
+              </div>
+              <a class="btn-navy" href="new-challenge.html">Request Reward</a>
+            </article>
+          </div>
+          <section class="section">
+            <article class="panel rewards-card">
+              <p class="section-label">Rewards</p>
+              <div class="table-wrap">
+                <table class="portal-table rewards-table">
+                  <thead>
+                    <tr><th>Reference ID</th><th>Reward Type</th><th>Requested On</th><th>Method</th><th>Status</th><th>Amount</th><th>Certificate</th><th>Invoice</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td colspan="8"><div class="rewards-empty"><p>No reward history yet</p><p>Completed and pending reward requests will appear here.</p></div></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </article>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="js/shell.js?v=6"></script>
+  <script src="js/portal.js?v=7"></script>
+  <script>FPShell.render("Rewards");</script>
+</body>
+</html>

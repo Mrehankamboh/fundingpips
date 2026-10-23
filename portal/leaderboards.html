@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Leaderboards | FundingPips</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/portal.css?v=35" />
+</head>
+<body>
+  <div class="app-shell">
+    <div class="app-banner" role="banner">New to FundingPips? Save 20% today with code FP</div>
+    <div class="app-body">
+      <aside class="app-rail" id="app-rail"></aside>
+      <div class="app-main">
+        <header class="app-topbar" id="app-topbar"></header>
+        <div class="app-content">
+          <div class="lb-head">
+            <p class="lb-live"><i></i>Live standings for the top funded traders.</p>
+            <div class="lb-controls">
+              <span>Currency:</span><button class="on" type="button">USD</button>
+              <span>Account Size:</span>
+              <button type="button" data-size="5k">5k</button><button type="button" data-size="10k">10k</button><button type="button" data-size="25k">25k</button>
+              <button type="button" data-size="50k">50k</button><button type="button" data-size="100k">100k</button><button type="button" data-size="200k">200k</button>
+              <button class="on" type="button" data-size="all">All</button>
+            </div>
+          </div>
+          <p class="section-label">Top Traders</p>
+          <div class="lb-podium">
+            <article class="lb-pod"><div class="n">1</div><div><strong>MOHAMED D <img class="lb-flag" src="https://flagcdn.com/w40/ma.png" alt="" /></strong><div class="amt">+$85,452.52</div><div class="pct">+28.48%</div><div class="trades">261 Trades</div></div><div class="ring" style="--p:29%"><i></i><span>29%</span></div></article>
+            <article class="lb-pod"><div class="n s">2</div><div><strong>Tim F <img class="lb-flag" src="https://flagcdn.com/w40/de.png" alt="" /></strong><div class="amt">+$33,595.65</div><div class="pct">+11.20%</div><div class="trades">45 Trades</div></div><div class="ring" style="--p:38%"><i></i><span>38%</span></div></article>
+            <article class="lb-pod"><div class="n b">3</div><div><strong>GUILHERME A <img class="lb-flag" src="https://flagcdn.com/w40/br.png" alt="" /></strong><div class="amt">+$17,808.13</div><div class="pct">+17.81%</div><div class="trades">1217 Trades</div></div><div class="ring gold" style="--p:62%"><i></i><span>62%</span></div></article>
+          </div>
+          <p class="section-label">Notable Records</p>
+          <div class="records">
+            <article class="panel"><span>Highest Total Rewards</span><strong>$389,778.55</strong><em class="who"><img class="lb-flag" src="https://flagcdn.com/w40/hr.png" alt="" />Valentino V</em></article>
+            <article class="panel"><span>Longest Master Acc Duration</span><strong>1047 days</strong><em class="who"><img class="lb-flag" src="https://flagcdn.com/w40/in.png" alt="" />Abhilash B</em></article>
+            <article class="panel"><span>Highest Single Reward</span><strong>$140,354.40</strong><em class="who"><img class="lb-flag" src="https://flagcdn.com/w40/de.png" alt="" />Jagroop D</em></article>
+            <article class="panel"><span>Highest Total Rewards Count</span><strong>39</strong><em class="who"><img class="lb-flag" src="https://flagcdn.com/w40/iq.png" alt="" />Zhenar I</em></article>
+          </div>
+          <div class="lb-board-head">
+            <p class="section-label">Full Ranking</p>
+            <div class="lb-switch">
+              <button class="on" type="button" data-board="profit">Profit</button>
+              <button type="button" data-board="rewards">Rewards</button>
+            </div>
+          </div>
+          <article class="panel" id="board-profit" style="padding:0">
+            <div class="table-wrap">
+              <table class="portal-table lb-table">
+                <thead><tr><th>Rank</th><th>Trader</th><th>Country</th><th>Profit</th><th>Profit %</th><th>Win Ratio</th><th>Pair</th><th>Avg. Win</th><th>Avg. Loss</th><th>Avg. Duration</th><th>Trades</th><th>Losing Streak</th><th>Winning Streak</th></tr></thead>
+                <tbody id="profit-body"></tbody>
+              </table>
+            </div>
+          </article>
+          <article class="panel" id="board-rewards" hidden style="padding:0">
+            <div class="table-wrap">
+              <table class="portal-table lb-table">
+                <thead><tr><th>Rank</th><th>Trader</th><th>Country</th><th>Account Size</th><th>Reward</th></tr></thead>
+                <tbody>
+                  <tr><td>1</td><td>Jagroop D</td><td></td><td>100k</td><td class="profit">$140,354.40</td></tr>
+                  <tr><td>2</td><td>Emeka I</td><td></td><td>100k</td><td class="profit">$86,207.00</td></tr>
+                  <tr><td>3</td><td>Patrik D</td><td></td><td>100k</td><td class="profit">$73,120.00</td></tr>
+                  <tr><td>4</td><td>Cinar I</td><td></td><td>300k</td><td class="profit">$58,320.14</td></tr>
+                  <tr><td>5</td><td>Patsachon S</td><td></td><td>300k</td><td class="profit">$53,894.88</td></tr>
+                  <tr><td>6</td><td>Florian K</td><td></td><td>300k</td><td class="profit">$52,199.00</td></tr>
+                  <tr><td>7</td><td>Chayin S</td><td></td><td>100k</td><td class="profit">$50,196.80</td></tr>
+                  <tr><td>8</td><td>Achinthya H</td><td></td><td>100k</td><td class="profit">$46,646.40</td></tr>
+                  <tr><td>9</td><td>Raimy Y</td><td></td><td>100k</td><td class="profit">$45,271.93</td></tr>
+                  <tr><td>10</td><td>Divyansh g</td><td></td><td>200k</td><td class="profit">$43,406.96</td></tr>
+                  <tr><td>11</td><td>matteo l</td><td></td><td>300k</td><td class="profit">$43,190.00</td></tr>
+                  <tr><td>12</td><td>Ahmad M</td><td></td><td>100k</td><td class="profit">$42,468.50</td></tr>
+                  <tr><td>13</td><td>Christian V</td><td></td><td>100k</td><td class="profit">$41,678.40</td></tr>
+                  <tr><td>14</td><td>Paulius S</td><td></td><td>100k</td><td class="profit">$41,105.60</td></tr>
+                  <tr><td>15</td><td>Vlad D</td><td></td><td>100k</td><td class="profit">$40,859.00</td></tr>
+                  <tr><td>16</td><td>Emmanuel N</td><td></td><td>100k</td><td class="profit">$40,276.40</td></tr>
+                  <tr><td>17</td><td>Zagros S</td><td></td><td>200k</td><td class="profit">$40,000.00</td></tr>
+                  <tr><td>18</td><td>Jan D</td><td></td><td>100k</td><td class="profit">$39,352.00</td></tr>
+                  <tr><td>19</td><td>Radmir Z</td><td></td><td>100k</td><td class="profit">$39,155.00</td></tr>
+                  <tr><td>20</td><td>Jan D</td><td></td><td>100k</td><td class="profit">$36,020.00</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="js/leaderboard.js?v=2"></script>
+  <script src="js/shell.js?v=6"></script>
+  <script src="js/portal.js?v=7"></script>
+  <script>
+    FPShell.render("Leaderboards");
+    document.querySelectorAll("[data-size]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll("[data-size]").forEach((b) => b.classList.toggle("on", b === btn));
+      });
+    });
+    document.querySelectorAll("[data-board]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll("[data-board]").forEach((b) => b.classList.toggle("on", b === btn));
+        document.getElementById("board-profit").hidden = btn.dataset.board !== "profit";
+        document.getElementById("board-rewards").hidden = btn.dataset.board !== "rewards";
+        document.querySelectorAll(".section-label")[2].textContent = btn.dataset.board === "rewards" ? "Top Rewards" : "Full Ranking";
+      });
+    });
+  </script>
+</body>
+</html>

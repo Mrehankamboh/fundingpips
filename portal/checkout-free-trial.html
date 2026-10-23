@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Checkout | FundingPips</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/portal.css?v=35" />
+</head>
+<body>
+  <div class="trial-page">
+    <div class="app-banner" role="banner">New to FundingPips? Save 20% today with code FP</div>
+    <div class="trial-wrap">
+      <div>
+        <h1>Start Your Free Trial</h1>
+        <p class="lead">Choose your account size and challenge type</p>
+        <p class="trial-label">Challenge Type</p>
+        <div class="trial-choices"><button class="on" type="button">2 Step</button></div>
+        <p class="trial-label">Model Type</p>
+        <div class="trial-choices">
+          <button class="on" type="button">Standard<small>Highest profit split</small></button>
+          <button type="button">Pro<small>Lowest profit target</small></button>
+        </div>
+        <p class="trial-label">Account Size</p>
+        <div class="trial-choices">
+          <button type="button">$5k</button>
+          <button type="button">$10k</button>
+          <button type="button">$25k</button>
+          <button class="on" type="button">$50k</button>
+          <button type="button">$100k</button>
+          <button type="button">$200k</button>
+        </div>
+      </div>
+      <aside class="trial-side">
+        <form action="dashboard.html">
+          <label for="country">Country</label>
+          <select id="country"><option>Pakistan</option><option>United States</option><option>United Kingdom</option></select>
+          <label for="email">Email</label>
+          <input id="email" type="email" placeholder="your@email.com" required />
+          <button type="submit">Start Trading</button>
+        </form>
+      </aside>
+    </div>
+  </div>
+  <script>
+    document.querySelectorAll(".trial-choices").forEach((row) => {
+      row.addEventListener("click", (event) => {
+        const btn = event.target.closest("button");
+        if (!btn) return;
+        row.querySelectorAll("button").forEach((b) => b.classList.remove("on"));
+        btn.classList.add("on");
+      });
+    });
+  </script>
+  <script src="js/portal.js?v=7"></script>
+</body>
+</html>
