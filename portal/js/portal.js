@@ -240,8 +240,22 @@
     if (params.get("reset") === "1") {
       authNote.textContent = "Your password was updated. Sign in with your new password.";
       authNote.hidden = false;
+    } else if (params.get("google") === "denied") {
+      authNote.textContent = "Google sign-in was cancelled.";
+      authNote.hidden = false;
+      authNote.classList.add("auth-note--error");
+    } else if (params.get("google")) {
+      authNote.textContent = "Google sign-in failed. Try again or use email.";
+      authNote.hidden = false;
+      authNote.classList.add("auth-note--error");
     }
   }
+
+  document.querySelectorAll(".btn-google").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      location.href = apiUrl("/api/auth/google");
+    });
+  });
 
   const publicAuthPages = new Set([
     "login",

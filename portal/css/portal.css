@@ -489,6 +489,14 @@ html.dark .auth-note {
   background: rgba(2, 122, 72, 0.18);
   color: #6ce9a6;
 }
+.auth-note.auth-note--error {
+  background: #fef2f2;
+  color: #b42318;
+}
+html.dark .auth-note.auth-note--error {
+  background: rgba(180, 35, 24, 0.18);
+  color: #ffb4a8;
+}
 .auth-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .auth-panel h1 { margin-top: 40px; }
 .auth-field { display: grid; gap: 6px; }

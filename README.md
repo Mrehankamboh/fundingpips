@@ -2,7 +2,7 @@
 
 Static visual clone of [fundingpips.com](https://fundingpips.com).
 
-> Note: The original HTTrack crawl at this folder failed with HTTP 429 (0 site files). This project was rebuilt from live probes (1440Ã—900) plus the prior homepage polish session.
+> Note: The original HTTrack crawl at this folder failed with HTTP 429 (0 site files). This project was rebuilt from live probes (1440×900) plus the prior homepage polish session.
 
 ## Run
 
@@ -22,30 +22,31 @@ npx vercel dev
 
 Open [http://127.0.0.1:3000](http://127.0.0.1:3000) (or the port `vercel dev` prints).
 
-## Backend (Neon â€” FundingPips auth)
+## Backend (Neon — FundingPips auth)
 
 - Neon project: `fundingpips` (`icy-poetry-86564381`, aws-us-east-2)
 - Tables: `users`, `sessions`, `password_resets`, `challenges` (purchases from FundingPips UI)
 - API:
   - `GET /api/health`
-  - `POST /api/auth/register` (sends welcome email) Â· `login` Â· `logout` Â· `forgot` (email) Â· `reset`
+  - `POST /api/auth/register` (sends welcome email) · `login` · `logout` · `forgot` (email) · `reset`
   - `GET /api/auth/me`
-  - `GET|POST /api/challenges` (buy now â†’ Neon)
+  - `GET|POST /api/challenges` (buy now ? Neon)
   - `GET /api/admin/users` (admin)
-- After login/register â†’ `/portal/dashboard.html`
-- Env: `DATABASE_URL`, `SESSION_SECRET`, `ADMIN_EMAIL`, `GMAIL_USER`, `GMAIL_APP_PASSWORD`, `APP_ORIGIN`
+- After login/register ? `/portal/dashboard.html`
+- Env: `DATABASE_URL`, `SESSION_SECRET`, `ADMIN_EMAIL`, `GMAIL_USER`, `GMAIL_APP_PASSWORD`, `APP_ORIGIN`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`
+- Google login: /api/auth/google ? callback creates/links user + session
 - Local: `npm start` (static + API on :3021). Do not use plain `npx serve` for auth.
 
 ## Stack
 
-- `index.html` â€” homepage
-- `css/styles.css` â€” shared layout & branding
-- `css/pages.css` â€” product / platform / legal / blog layouts
-- `js/main.js` â€” nav, pricing (home), FAQ, carousel helpers
-- `assets/logo.svg` â€” logo mark
-- `portal/` â€” app shell (login/register hit Neon APIs)
-- `api/` â€” Vercel serverless auth + health
-- `lib/` â€” Neon client + session helpers
+- `index.html` — homepage
+- `css/styles.css` — shared layout & branding
+- `css/pages.css` — product / platform / legal / blog layouts
+- `js/main.js` — nav, pricing (home), FAQ, carousel helpers
+- `assets/logo.svg` — logo mark
+- `portal/` — app shell (login/register hit Neon APIs)
+- `api/` — Vercel serverless auth + health
+- `lib/` — Neon client + session helpers
 
 ## Marketing pages
 
