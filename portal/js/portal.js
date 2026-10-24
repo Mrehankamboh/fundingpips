@@ -196,6 +196,17 @@
     });
   }
 
+  function showAuthSuccess(form, message) {
+    let el = form.querySelector(".auth-form-error, .auth-form-success");
+    if (!el) {
+      el = document.createElement("p");
+      el.setAttribute("role", "status");
+      form.prepend(el);
+    }
+    el.className = "auth-form-success";
+    el.textContent = message;
+  }
+
   const resetForm = document.querySelector("form.reset-form");
   if (resetForm) {
     resetForm.addEventListener("submit", async (e) => {
@@ -210,12 +221,26 @@
           password: payload.password,
           password_confirmation: payload.password_confirmation || payload.password,
         });
-        location.href = data.redirect || portalUrl("dashboard.html");
+        const msg =
+          data.message || "Your password was updated. Sign in with your new password.";
+        showAuthSuccess(resetForm, msg);
+        setTimeout(() => {
+          location.href = data.redirect || portalUrl("login.html?reset=1");
+        }, 900);
       } catch (err) {
         showAuthError(resetForm, authErrorText(err && err.message, "Reset failed"));
         if (btn) btn.disabled = false;
       }
     });
+  }
+
+  const authNote = document.querySelector(".auth-note");
+  if (authNote) {
+    const params = new URLSearchParams(location.search);
+    if (params.get("reset") === "1") {
+      authNote.textContent = "Your password was updated. Sign in with your new password.";
+      authNote.hidden = false;
+    }
   }
 
   const publicAuthPages = new Set([

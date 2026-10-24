@@ -56,7 +56,11 @@ module.exports = async function handler(req, res) {
 
     const session = await createSession(sql, userId);
     res.setHeader("Set-Cookie", sessionCookie(session));
-    json(res, 200, { ok: true, redirect: "/portal/dashboard.html" });
+    json(res, 200, {
+      ok: true,
+      message: "Your password was updated. Sign in with your new password.",
+      redirect: "/portal/login.html?reset=1",
+    });
   } catch (err) {
     json(res, 500, { ok: false, error: errorMessage(err, "Reset failed") });
   }
