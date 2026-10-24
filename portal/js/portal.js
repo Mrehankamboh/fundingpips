@@ -181,20 +181,14 @@
         const data = await postAuth("/api/auth/forgot", { email });
         showAuthError(
           forgotForm,
-          data.resetUrl
-            ? "Reset link ready — redirecting…"
-            : data.message || "If that email exists, a reset link was created."
+          data.message || "If that email exists, a reset link has been sent."
         );
         const box = forgotForm.querySelector(".auth-form-error");
         if (box) {
           box.style.background = "#ecfdf3";
           box.style.color = "#027a48";
         }
-        if (data.resetUrl) {
-          setTimeout(() => {
-            location.href = data.resetUrl;
-          }, 600);
-        }
+        if (btn) btn.disabled = false;
       } catch (err) {
         showAuthError(forgotForm, authErrorText(err && err.message, "Could not send reset"));
         if (btn) btn.disabled = false;

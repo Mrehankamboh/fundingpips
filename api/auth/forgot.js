@@ -2,6 +2,7 @@ const crypto = require("crypto");
 const { getSql } = require("../../lib/db");
 const { ensureSchema } = require("../../lib/schema");
 const { readJson, json, errorMessage } = require("../../lib/auth");
+const { hasMailer, sendPasswordResetEmail } = require("../../lib/mail");
 
 module.exports = async function handler(req, res) {
   if (req.method !== "POST") {
@@ -10,6 +11,14 @@ module.exports = async function handler(req, res) {
   }
 
   try {
+    if (!hasMailer()) {
+      json(res, 503, {
+        ok: false,
+        error: "Email is not configured. Set GMAIL_USER and GMAIL_APP_PASSWORD.",
+      });
+      return;
+    }
+
     const body = await readJson(req);
     const email = String(body.email || "")
       .trim()
@@ -27,7 +36,10 @@ module.exports = async function handler(req, res) {
 
     // Always ok (don't leak whether email exists)
     if (!rows.length) {
-      json(res, 200, { ok: true });
+      json(res, 200, {
+        ok: true,
+        message: "If that email exists, a reset link has been sent.",
+      });
       return;
     }
 
@@ -39,22 +51,17 @@ module.exports = async function handler(req, res) {
       VALUES (${token}, ${user.id}, now() + interval '1 hour')
     `;
 
-    const origin =
-      (req.headers["x-forwarded-proto"] && req.headers["x-forwarded-host"]
-        ? `${req.headers["x-forwarded-proto"]}://${req.headers["x-forwarded-host"]}`
-        : "") ||
-      process.env.APP_ORIGIN ||
-      "https://fundingpips-xi.vercel.app";
-    const resetPath = `/portal/reset-password.html?token=${encodeURIComponent(token)}`;
-    const resetUrl = `${origin.replace(/\/$/, "")}${resetPath}`;
+    await sendPasswordResetEmail({
+      firstName: String(user.first_name || ""),
+      email: String(user.email || email),
+      token,
+    });
 
-    // Email provider optional — return link so flow works without SMTP
     json(res, 200, {
       ok: true,
-      resetUrl,
-      message: "Password reset link created. Open the link to set a new password.",
+      message: "Check your email for the password reset link.",
     });
   } catch (err) {
-    json(res, 500, { ok: false, error: errorMessage(err, "Could not start reset") });
+    json(res, 500, { ok: false, error: errorMessage(err, "Could not send reset email") });
   }
 };

@@ -18,7 +18,9 @@ module.exports = async function handler(req, res) {
 
     const rows = await sql`
       SELECT
-        u.id, u.email, u.first_name, u.last_name, u.country, u.role, u.blocked, u.created_at
+        u.id, u.email, u.first_name, u.last_name, u.country, u.role, u.blocked, u.created_at,
+        (SELECT count(*)::int FROM challenges c WHERE c.user_id = u.id) AS challenge_count,
+        (SELECT coalesce(sum(c.fee * c.quantity), 0) FROM challenges c WHERE c.user_id = u.id) AS spent
       FROM users u
       ORDER BY u.created_at DESC
       LIMIT 500
@@ -35,8 +37,8 @@ module.exports = async function handler(req, res) {
         role: String(row.role || "user"),
         blocked: !!row.blocked,
         created_at: row.created_at,
-        challenge_count: 0,
-        spent: 0,
+        challenge_count: Number(row.challenge_count || 0),
+        spent: Number(row.spent || 0),
       })),
     });
   } catch (err) {

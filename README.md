@@ -25,16 +25,16 @@ Open [http://127.0.0.1:3000](http://127.0.0.1:3000) (or the port `vercel dev` pr
 ## Backend (Neon — FundingPips auth)
 
 - Neon project: `fundingpips` (`icy-poetry-86564381`, aws-us-east-2)
-- Tables (auth only): `users`, `sessions`, `password_resets`
-- **No Forge catalog tables** — prices/challenges must match FundingPips live data when added later
+- Tables: `users`, `sessions`, `password_resets`, `challenges` (purchases from FundingPips UI)
 - API:
   - `GET /api/health`
-  - `POST /api/auth/register` · `login` · `logout` · `forgot` · `reset`
+  - `POST /api/auth/register` (sends welcome email) · `login` · `logout` · `forgot` (email) · `reset`
   - `GET /api/auth/me`
+  - `GET|POST /api/challenges` (buy now → Neon)
   - `GET /api/admin/users` (admin)
 - After login/register → `/portal/dashboard.html`
-- Env: `DATABASE_URL`, `SESSION_SECRET`, `ADMIN_EMAIL` (local `.env.local` + Vercel)
-- Use the **Vercel URL** or `npx vercel dev` — plain `npx serve` has no `/api`
+- Env: `DATABASE_URL`, `SESSION_SECRET`, `ADMIN_EMAIL`, `GMAIL_USER`, `GMAIL_APP_PASSWORD`, `APP_ORIGIN`
+- Local: `npm start` (static + API on :3021). Do not use plain `npx serve` for auth.
 
 ## Stack
 

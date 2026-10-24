@@ -269,7 +269,9 @@
                 evaluationType: state.type || "2 Step",
                 accountSize: size,
                 platform: state.platform || "MetaTrader 5",
+                plan: state.plan || null,
                 fee,
+                quantity: state.qty || 1,
                 addons: [
                   state.plan ? String(state.plan) : null,
                   state.swing ? "Swing" : null,

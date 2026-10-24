@@ -8,6 +8,7 @@ const {
   json,
   errorMessage,
 } = require("../../lib/auth");
+const { sendWelcomeEmail } = require("../../lib/mail");
 
 module.exports = async function handler(req, res) {
   if (req.method !== "POST") {
@@ -72,6 +73,13 @@ module.exports = async function handler(req, res) {
     const user = rows[0];
     const token = await createSession(sql, user.id);
     res.setHeader("Set-Cookie", sessionCookie(token));
+
+    try {
+      await sendWelcomeEmail({ firstName: user.first_name, email: user.email });
+    } catch (mailErr) {
+      console.warn("welcome email failed", mailErr.message || mailErr);
+    }
+
     json(res, 201, {
       ok: true,
       redirect: "/portal/dashboard.html",
