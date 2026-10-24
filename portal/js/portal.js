@@ -244,8 +244,29 @@
       authNote.textContent = "Google sign-in was cancelled.";
       authNote.hidden = false;
       authNote.classList.add("auth-note--error");
+    } else if (params.get("google") === "config") {
+      authNote.textContent =
+        "Google login is not set up yet. Add GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET, then restart the server.";
+      authNote.hidden = false;
+      authNote.classList.add("auth-note--error");
+    } else if (params.get("google") === "invalid") {
+      authNote.textContent =
+        "Google sign-in expired or origin mismatch. Open http://127.0.0.1:3021 (not localhost) and try again.";
+      authNote.hidden = false;
+      authNote.classList.add("auth-note--error");
+    } else if (params.get("google") === "secret") {
+      authNote.textContent =
+        "Google Client Secret is invalid. Reset the secret in Google Cloud and paste the new value here.";
+      authNote.hidden = false;
+      authNote.classList.add("auth-note--error");
+    } else if (params.get("google") === "redirect") {
+      authNote.textContent =
+        "Google redirect URI mismatch. Add this site callback URL in the OAuth client settings.";
+      authNote.hidden = false;
+      authNote.classList.add("auth-note--error");
     } else if (params.get("google")) {
-      authNote.textContent = "Google sign-in failed. Try again or use email.";
+      authNote.textContent =
+        "Google sign-in failed. Add your Gmail as a Test user in Google Cloud, then try again.";
       authNote.hidden = false;
       authNote.classList.add("auth-note--error");
     }

@@ -1,13 +1,13 @@
-const { getSql } = require("../../../lib/db");
-const { ensureSchema } = require("../../../lib/schema");
+const { getSql } = require("../../lib/db");
+const { ensureSchema } = require("../../lib/schema");
 const {
   createSession,
   sessionCookie,
   parseCookies,
   json,
   errorMessage,
-} = require("../../../lib/auth");
-const { sendWelcomeEmail } = require("../../../lib/mail");
+} = require("../../lib/auth");
+const { sendWelcomeEmail } = require("../../lib/mail");
 const {
   STATE_COOKIE,
   hasGoogleAuth,
@@ -16,7 +16,7 @@ const {
   fetchGoogleProfile,
   redirect,
   parseQuery,
-} = require("../../../lib/google");
+} = require("../../lib/google");
 
 module.exports = async function handler(req, res) {
   if (req.method !== "GET") {
@@ -107,7 +107,15 @@ module.exports = async function handler(req, res) {
       clearStateCookie(),
     ]);
   } catch (err) {
-    console.error("google callback", errorMessage(err, "Google login failed"));
-    redirect(res, "/portal/login.html?google=error", clearStateCookie());
+    const msg = errorMessage(err, "Google login failed");
+    console.error("google callback", msg);
+    const lower = msg.toLowerCase();
+    let code = "error";
+    if (lower.includes("client secret") || lower.includes("invalid_client")) {
+      code = "secret";
+    } else if (lower.includes("redirect_uri")) {
+      code = "redirect";
+    }
+    redirect(res, `/portal/login.html?google=${code}`, clearStateCookie());
   }
 };

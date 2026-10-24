@@ -14,6 +14,11 @@ module.exports = async function handler(req, res) {
   }
 
   if (!hasGoogleAuth()) {
+    const accept = String(req.headers.accept || "");
+    if (accept.includes("text/html") || !accept.includes("application/json")) {
+      redirect(res, "/portal/login.html?google=config");
+      return;
+    }
     json(res, 503, {
       ok: false,
       error:
