@@ -73,25 +73,49 @@
     return fallback || "Request failed";
   }
 
-  async function postAuth(url, payload) {
-    const res = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Accept: "application/json" },
+  function apiUrl(path) {
+    return new URL(path, location.origin).pathname;
+  }
+
+  function portalUrl(file) {
+    return "/portal/" + String(file || "dashboard.html").replace(/^\//, "");
+  }
+
+  async function apiFetch(path, options) {
+    const opts = options || {};
+    const res = await fetch(apiUrl(path), {
+      method: opts.method || "GET",
+      headers: Object.assign(
+        { Accept: "application/json" },
+        opts.body ? { "Content-Type": "application/json" } : {},
+        opts.headers || {}
+      ),
       credentials: "same-origin",
-      body: JSON.stringify(payload),
+      body: opts.body != null ? JSON.stringify(opts.body) : undefined,
     });
     let data = {};
+    const text = await res.text();
     try {
-      data = await res.json();
+      data = text ? JSON.parse(text) : {};
     } catch (_) {
-      data = {};
+      data = { error: text && text.slice(0, 160) };
     }
     if (!res.ok || data.ok === false) {
-      throw new Error(
-        authErrorText(data.error != null ? data.error : data, "Request failed (" + res.status + ")")
+      let msg = authErrorText(
+        data.error != null ? data.error : data.message || data,
+        "Request failed (" + res.status + ")"
       );
+      if (res.status === 404) {
+        msg =
+          "API not found. Open the Vercel site (or run npx vercel dev) — plain static serve has no /api.";
+      }
+      throw new Error(msg);
     }
     return data;
+  }
+
+  async function postAuth(url, payload) {
+    return apiFetch(url, { method: "POST", body: payload });
   }
 
   function formToObject(form) {
@@ -123,30 +147,104 @@
       e.preventDefault();
       const btn = form.querySelector('button[type="submit"]');
       const page = (location.pathname.split("/").pop() || "").replace(/\.html$/, "");
-      const isRegister = page === "register" || form.querySelector("#first_name");
-      const isLogin = page === "login" || (!isRegister && form.querySelector("#password"));
+      const isRegister = page === "register" || !!form.querySelector("#first_name");
+      const isLogin = page === "login" || (!isRegister && !!form.querySelector("#password"));
       if (!isRegister && !isLogin) {
-        location.href = "dashboard.html";
+        location.href = portalUrl("dashboard.html");
         return;
       }
       if (btn) btn.disabled = true;
       try {
         const payload = formToObject(form);
-        if (isRegister) {
-          await postAuth("/api/auth/register", payload);
-        } else {
-          await postAuth("/api/auth/login", {
-            email: payload.email,
-            password: payload.password,
-          });
-        }
-        location.href = "dashboard.html";
+        const data = isRegister
+          ? await postAuth("/api/auth/register", payload)
+          : await postAuth("/api/auth/login", {
+              email: payload.email,
+              password: payload.password,
+            });
+        location.href = data.redirect || portalUrl("dashboard.html");
       } catch (err) {
         showAuthError(form, authErrorText(err && err.message, "Something went wrong"));
         if (btn) btn.disabled = false;
       }
     });
   });
+
+  const forgotForm = document.querySelector(".forgot-page form, form.forgot-form");
+  if (forgotForm) {
+    forgotForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const btn = forgotForm.querySelector('button[type="submit"]');
+      if (btn) btn.disabled = true;
+      try {
+        const email = String(new FormData(forgotForm).get("email") || "").trim();
+        const data = await postAuth("/api/auth/forgot", { email });
+        showAuthError(
+          forgotForm,
+          data.resetUrl
+            ? "Reset link ready — redirecting…"
+            : data.message || "If that email exists, a reset link was created."
+        );
+        const box = forgotForm.querySelector(".auth-form-error");
+        if (box) {
+          box.style.background = "#ecfdf3";
+          box.style.color = "#027a48";
+        }
+        if (data.resetUrl) {
+          setTimeout(() => {
+            location.href = data.resetUrl;
+          }, 600);
+        }
+      } catch (err) {
+        showAuthError(forgotForm, authErrorText(err && err.message, "Could not send reset"));
+        if (btn) btn.disabled = false;
+      }
+    });
+  }
+
+  const resetForm = document.querySelector("form.reset-form");
+  if (resetForm) {
+    resetForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const btn = resetForm.querySelector('button[type="submit"]');
+      if (btn) btn.disabled = true;
+      try {
+        const payload = formToObject(resetForm);
+        const token = new URLSearchParams(location.search).get("token") || payload.token;
+        const data = await postAuth("/api/auth/reset", {
+          token,
+          password: payload.password,
+          password_confirmation: payload.password_confirmation || payload.password,
+        });
+        location.href = data.redirect || portalUrl("dashboard.html");
+      } catch (err) {
+        showAuthError(resetForm, authErrorText(err && err.message, "Reset failed"));
+        if (btn) btn.disabled = false;
+      }
+    });
+  }
+
+  const publicAuthPages = new Set([
+    "login",
+    "register",
+    "forgot-password",
+    "reset-password",
+  ]);
+  const onPortalApp =
+    document.getElementById("app-rail") || document.getElementById("app-topbar");
+  if (onPortalApp && !publicAuthPages.has(file)) {
+    apiFetch("/api/auth/me")
+      .then((data) => {
+        window.FPUser = data.user;
+        document.dispatchEvent(new CustomEvent("fp:user", { detail: data.user }));
+        if (window.FPShell && typeof FPShell.applyUser === "function") {
+          FPShell.applyUser(data.user);
+        }
+      })
+      .catch(() => {
+        location.href = portalUrl("login.html");
+      });
+  }
 
   (function fillAuthGeo() {
     const geo = window.FPAuthGeo;

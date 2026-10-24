@@ -116,11 +116,32 @@ window.FPShell = {
             <span>Mode</span>
             <span class="user-menu-pill">${this.theme() === "dark" ? "Dark" : "Light"}</span>
           </button>
-          <a class="user-menu-item" role="menuitem" href="login.html">${this.svg(this.icons.logout, 18)}<span>Log out</span></a>
+          <button class="user-menu-item user-menu-logout" type="button" role="menuitem">${this.svg(this.icons.logout, 18)}<span>Log out</span></button>
         </div>
       </div>`;
     document.title = `${activeTitle || "Trade Desk"} | FundingPips`;
     this.bindMenu();
+    if (window.FPUser) this.applyUser(window.FPUser);
+  },
+  applyUser(user) {
+    if (!user) return;
+    const name = [user.first_name, user.last_name].filter(Boolean).join(" ").trim() || "Trader";
+    const email = user.email || "";
+    const initials = name
+      .split(/\s+/)
+      .map((p) => p[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase() || "FP";
+    const nameEl = document.querySelector(".user-menu-name");
+    const emailEl = document.querySelector(".user-menu-email");
+    const avatarEl = document.querySelector(".user-menu-avatar");
+    if (nameEl) nameEl.textContent = name;
+    if (emailEl) emailEl.textContent = email;
+    if (avatarEl) avatarEl.textContent = initials;
+    document.querySelectorAll(".greet-card h2").forEach((el) => {
+      el.textContent = "Hey, " + (user.first_name || name.split(" ")[0] || "Trader");
+    });
   },
   bindMenu() {
     const root = document.querySelector(".user-menu");
@@ -141,6 +162,23 @@ window.FPShell = {
       localStorage.setItem("fp-theme", next);
       this.applyTheme(next);
     });
+    const logoutBtn = root.querySelector(".user-menu-logout");
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", async (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        try {
+          await fetch("/api/auth/logout", {
+            method: "POST",
+            credentials: "same-origin",
+            headers: { Accept: "application/json" },
+          });
+        } catch (_) {
+          /* ignore */
+        }
+        location.href = "/portal/login.html";
+      });
+    }
     document.addEventListener("click", (event) => {
       if (!root.contains(event.target)) setOpen(false);
     });

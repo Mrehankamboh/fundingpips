@@ -22,17 +22,21 @@ npx vercel dev
 
 Open [http://127.0.0.1:3000](http://127.0.0.1:3000) (or the port `vercel dev` prints).
 
-## Backend (Neon)
+## Backend (Neon — Forge-style)
 
 - Neon project: `fundingpips` (`icy-poetry-86564381`, aws-us-east-2)
-- Table: `users` (register / login)
+- Tables: `users`, `sessions`, `password_resets`, `challenges`, `challenge_prices`, `payouts`, `dashboards`, `tickets`
 - API:
-  - `GET /api/health` — DB ping
-  - `POST /api/auth/register`
-  - `POST /api/auth/login`
+  - `GET /api/health`
+  - `POST /api/auth/register` · `login` · `logout` · `forgot` · `reset`
   - `GET /api/auth/me`
-  - `POST /api/auth/logout`
-- Env: `DATABASE_URL`, `SESSION_SECRET` (local `.env.local`, also on Vercel)
+  - `GET|POST /api/challenges`
+  - `GET /api/prices`
+  - `GET|POST /api/payouts`
+  - `GET /api/admin/users` (admin)
+- After login/register → `/portal/dashboard.html`
+- Env: `DATABASE_URL`, `SESSION_SECRET`, `ADMIN_EMAIL` (local `.env.local` + Vercel)
+- Use the **Vercel URL** or `npx vercel dev` — plain `npx serve` has no `/api` (that caused “path could not be found”)
 
 ## Stack
 

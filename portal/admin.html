@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Users | FundingPips</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/portal.css?v=40" />
+  <style>
+    .admin-wrap { max-width: 1100px; margin: 24px auto; padding: 0 16px; }
+    .admin-wrap table { width: 100%; border-collapse: collapse; background: #fff; }
+    .admin-wrap th, .admin-wrap td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e8eaef; font-size: 14px; }
+    .admin-wrap th { background: #f6f7f9; }
+    .admin-err { color: #b42318; }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <div class="app-banner" role="banner">Admin</div>
+    <div class="app-body">
+      <aside class="app-rail" id="app-rail"></aside>
+      <div class="app-main">
+        <header class="app-topbar" id="app-topbar"></header>
+        <div class="app-content">
+          <div class="admin-wrap">
+            <h1>Users</h1>
+            <p class="lead">Forge-style directory: signups, challenges, spend.</p>
+            <p id="admin-status">Loading…</p>
+            <div style="overflow:auto">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th><th>Email</th><th>Country</th><th>Role</th><th>Challenges</th><th>Spent</th><th>Joined</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-users"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="js/shell.js?v=7"></script>
+  <script src="js/portal.js?v=13"></script>
+  <script>
+    document.addEventListener("fp:user", async (ev) => {
+      const status = document.getElementById("admin-status");
+      const body = document.getElementById("admin-users");
+      if (ev.detail.role !== "admin") {
+        status.className = "admin-err";
+        status.textContent = "Admin only. Set ADMIN_EMAIL in Vercel env to your email.";
+        return;
+      }
+      try {
+        const res = await fetch("/api/admin/users", { credentials: "same-origin" });
+        const data = await res.json();
+        if (!res.ok || !data.ok) throw new Error(data.error || "Failed");
+        status.textContent = data.users.length + " users";
+        body.innerHTML = data.users
+          .map(
+            (u) =>
+              "<tr><td>" +
+              [u.first_name, u.last_name].join(" ") +
+              "</td><td>" +
+              u.email +
+              "</td><td>" +
+              (u.country || "—") +
+              "</td><td>" +
+              u.role +
+              "</td><td>" +
+              u.challenge_count +
+              "</td><td>$" +
+              Number(u.spent).toFixed(2) +
+              "</td><td>" +
+              new Date(u.created_at).toLocaleDateString() +
+              "</td></tr>"
+          )
+          .join("");
+      } catch (err) {
+        status.className = "admin-err";
+        status.textContent = err.message || "Failed to load users";
+      }
+    });
+  </script>
+</body>
+</html>

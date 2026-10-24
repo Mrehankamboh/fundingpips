@@ -1,10 +1,12 @@
 const { getSql } = require("../../lib/db");
+const { ensureSchema } = require("../../lib/schema");
 const {
   hashPassword,
-  signSession,
+  createSession,
   sessionCookie,
   readJson,
   json,
+  errorMessage,
 } = require("../../lib/auth");
 
 module.exports = async function handler(req, res) {
@@ -19,7 +21,9 @@ module.exports = async function handler(req, res) {
       .trim()
       .toLowerCase();
     const password = String(body.password || "");
-    const passwordConfirmation = String(body.password_confirmation || body.passwordConfirmation || "");
+    const passwordConfirmation = String(
+      body.password_confirmation || body.passwordConfirmation || ""
+    );
     const firstName = String(body.first_name || body.firstName || "").trim();
     const lastName = String(body.last_name || body.lastName || "").trim();
 
@@ -37,6 +41,8 @@ module.exports = async function handler(req, res) {
     }
 
     const sql = getSql();
+    await ensureSchema(sql);
+
     const existing = await sql`select id from users where lower(email) = ${email} limit 1`;
     if (existing.length) {
       json(res, 409, { ok: false, error: "Email already registered" });
@@ -60,27 +66,25 @@ module.exports = async function handler(req, res) {
         ${email}, ${passwordHash}, ${firstName}, ${lastName}, ${title},
         ${dob}, ${country}, ${phoneCountry}, ${phoneNumber}, ${referrer}, ${marketing}
       )
-      returning id, email, first_name, last_name, country, created_at
+      returning id, email, first_name, last_name, country, role
     `;
 
     const user = rows[0];
-    const token = signSession(user.id);
+    const token = await createSession(sql, user.id);
     res.setHeader("Set-Cookie", sessionCookie(token));
     json(res, 201, {
       ok: true,
+      redirect: "/portal/dashboard.html",
       user: {
         id: user.id,
         email: user.email,
         first_name: user.first_name,
         last_name: user.last_name,
         country: user.country,
+        role: user.role || "user",
       },
     });
   } catch (err) {
-    const message =
-      (err && typeof err.message === "string" && err.message) ||
-      (err && typeof err.detail === "string" && err.detail) ||
-      "Registration failed";
-    json(res, 500, { ok: false, error: message });
+    json(res, 500, { ok: false, error: errorMessage(err, "Registration failed") });
   }
 };

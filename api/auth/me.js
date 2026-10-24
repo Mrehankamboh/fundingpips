@@ -1,5 +1,5 @@
 const { getSql } = require("../../lib/db");
-const { COOKIE, verifySession, parseCookies, json } = require("../../lib/auth");
+const { userFromRequest, json, errorMessage } = require("../../lib/auth");
 
 module.exports = async function handler(req, res) {
   if (req.method !== "GET") {
@@ -8,27 +8,14 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const cookies = parseCookies(req);
-    const uid = verifySession(cookies[COOKIE]);
-    if (!uid) {
-      json(res, 401, { ok: false, error: "Not signed in" });
-      return;
-    }
-
     const sql = getSql();
-    const rows = await sql`
-      select id, email, first_name, last_name, country, created_at
-      from users
-      where id = ${uid}::uuid
-      limit 1
-    `;
-    if (!rows.length) {
+    const user = await userFromRequest(sql, req);
+    if (!user) {
       json(res, 401, { ok: false, error: "Not signed in" });
       return;
     }
-
-    json(res, 200, { ok: true, user: rows[0] });
+    json(res, 200, { ok: true, user });
   } catch (err) {
-    json(res, 500, { ok: false, error: err.message || "Session error" });
+    json(res, 500, { ok: false, error: errorMessage(err, "Session error") });
   }
 };
