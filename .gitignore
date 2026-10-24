@@ -12,3 +12,4 @@ _shot*
 _gen*
 *.cjs
 !portal/**/*.cjs
+.vercel

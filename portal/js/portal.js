@@ -94,6 +94,229 @@
         dial.appendChild(o);
       });
     }
+
+    const CHEVRON =
+      '<svg class="auth-combo-chevron" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 8.99985L11.2929 5.70696C11.6834 5.31643 12.3166 5.31643 12.7071 5.70696L16 8.99985" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 15L12.7071 18.2929C12.3166 18.6834 11.6834 18.6834 11.2929 18.2929L8 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+    function closeAllCombos(except) {
+      document.querySelectorAll(".auth-combo.is-open").forEach((wrap) => {
+        if (wrap === except) return;
+        wrap.classList.remove("is-open");
+        const btn = wrap.querySelector(".auth-combo-trigger");
+        if (btn) btn.setAttribute("aria-expanded", "false");
+      });
+    }
+
+    function enhanceAuthCombo(select, opts) {
+      if (!select || select.dataset.comboReady) return null;
+      select.dataset.comboReady = "1";
+      select.classList.add("auth-combo-native");
+      select.tabIndex = -1;
+
+      const wrap = document.createElement("div");
+      wrap.className = "auth-combo" + (opts.compact ? " auth-combo--compact" : "");
+      select.parentNode.insertBefore(wrap, select);
+      wrap.appendChild(select);
+
+      const placeholder =
+        opts.placeholder ||
+        (select.options[0] && !select.options[0].value
+          ? select.options[0].textContent
+          : "Select");
+
+      const trigger = document.createElement("button");
+      trigger.type = "button";
+      trigger.className = "auth-combo-trigger is-placeholder";
+      trigger.setAttribute("aria-haspopup", "listbox");
+      trigger.setAttribute("aria-expanded", "false");
+      if (select.id) trigger.id = select.id + "_trigger";
+      trigger.innerHTML =
+        '<span class="auth-combo-trigger-label"></span>' + CHEVRON;
+      const labelEl = trigger.querySelector(".auth-combo-trigger-label");
+      wrap.appendChild(trigger);
+
+      const panel = document.createElement("div");
+      panel.className = "auth-combo-panel";
+      panel.setAttribute("role", "dialog");
+
+      let searchInput = null;
+      if (opts.searchable !== false) {
+        const searchRow = document.createElement("div");
+        searchRow.className = "auth-combo-search";
+        searchInput = document.createElement("input");
+        searchInput.type = "search";
+        searchInput.setAttribute("role", "combobox");
+        searchInput.setAttribute("aria-autocomplete", "list");
+        searchInput.placeholder = opts.searchPlaceholder || "Search...";
+        searchInput.autocomplete = "off";
+        searchRow.appendChild(searchInput);
+        panel.appendChild(searchRow);
+      }
+
+      const list = document.createElement("ul");
+      list.className = "auth-combo-list";
+      list.setAttribute("role", "listbox");
+      panel.appendChild(list);
+      wrap.appendChild(panel);
+
+      let activeIndex = -1;
+
+      function optionRows() {
+        return Array.from(select.options).filter((o) => o.value !== "");
+      }
+
+      function syncTrigger() {
+        const opt = select.selectedOptions[0];
+        const has = !!(opt && opt.value);
+        labelEl.textContent = has ? opt.textContent : placeholder;
+        trigger.classList.toggle("is-placeholder", !has);
+      }
+
+      function renderList(filter) {
+        const q = (filter || "").trim().toLowerCase();
+        list.innerHTML = "";
+        const rows = optionRows().filter((o) =>
+          !q || o.textContent.toLowerCase().includes(q)
+        );
+        if (!rows.length) {
+          const empty = document.createElement("li");
+          empty.className = "auth-combo-empty";
+          empty.textContent = "No results.";
+          list.appendChild(empty);
+          activeIndex = -1;
+          return;
+        }
+        rows.forEach((o, i) => {
+          const li = document.createElement("li");
+          li.setAttribute("role", "none");
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "auth-combo-option";
+          btn.setAttribute("role", "option");
+          btn.dataset.value = o.value;
+          btn.textContent = o.textContent;
+          if (o.value === select.value) btn.classList.add("is-selected");
+          btn.addEventListener("mouseenter", () => setActive(i));
+          btn.addEventListener("click", (e) => {
+            e.preventDefault();
+            pick(o.value);
+          });
+          li.appendChild(btn);
+          list.appendChild(li);
+        });
+        activeIndex = -1;
+        const selectedBtn = list.querySelector(".auth-combo-option.is-selected");
+        if (selectedBtn) {
+          const idx = Array.from(list.querySelectorAll(".auth-combo-option")).indexOf(
+            selectedBtn
+          );
+          setActive(idx);
+          selectedBtn.scrollIntoView({ block: "nearest" });
+        }
+      }
+
+      function optionButtons() {
+        return Array.from(list.querySelectorAll(".auth-combo-option"));
+      }
+
+      function setActive(i) {
+        const buttons = optionButtons();
+        buttons.forEach((b) => b.classList.remove("is-active"));
+        activeIndex = i;
+        if (i >= 0 && buttons[i]) {
+          buttons[i].classList.add("is-active");
+          buttons[i].scrollIntoView({ block: "nearest" });
+        }
+      }
+
+      function open() {
+        closeAllCombos(wrap);
+        wrap.classList.add("is-open");
+        trigger.setAttribute("aria-expanded", "true");
+        if (searchInput) searchInput.value = "";
+        renderList("");
+        if (searchInput) {
+          requestAnimationFrame(() => searchInput.focus());
+        }
+      }
+
+      function close() {
+        wrap.classList.remove("is-open");
+        trigger.setAttribute("aria-expanded", "false");
+      }
+
+      function pick(value) {
+        select.value = value;
+        select.dispatchEvent(new Event("change", { bubbles: true }));
+        syncTrigger();
+        close();
+        trigger.focus();
+      }
+
+      trigger.addEventListener("click", () => {
+        if (wrap.classList.contains("is-open")) close();
+        else open();
+      });
+
+      if (searchInput) {
+        searchInput.addEventListener("input", () => renderList(searchInput.value));
+        searchInput.addEventListener("keydown", (e) => {
+          const buttons = optionButtons();
+          if (e.key === "ArrowDown") {
+            e.preventDefault();
+            setActive(Math.min(activeIndex + 1, buttons.length - 1));
+          } else if (e.key === "ArrowUp") {
+            e.preventDefault();
+            setActive(Math.max(activeIndex - 1, 0));
+          } else if (e.key === "Enter") {
+            e.preventDefault();
+            if (activeIndex >= 0 && buttons[activeIndex]) {
+              pick(buttons[activeIndex].dataset.value);
+            }
+          } else if (e.key === "Escape") {
+            e.preventDefault();
+            close();
+            trigger.focus();
+          }
+        });
+      }
+
+      select.addEventListener("change", syncTrigger);
+      syncTrigger();
+
+      return {
+        wrap,
+        syncTrigger,
+        setValue(value) {
+          select.value = value;
+          syncTrigger();
+        },
+      };
+    }
+
+    const titleCombo = enhanceAuthCombo(title, {
+      searchable: false,
+      placeholder: "Select title",
+    });
+    const countryCombo = enhanceAuthCombo(country, {
+      searchable: true,
+      searchPlaceholder: "Search countries...",
+      placeholder: "Select a country",
+    });
+    const dialCombo = enhanceAuthCombo(dial, {
+      searchable: true,
+      searchPlaceholder: "Search countries...",
+      placeholder: "Select country",
+      compact: true,
+    });
+
+    document.addEventListener("mousedown", (e) => {
+      if (!e.target.closest(".auth-combo")) closeAllCombos();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeAllCombos();
+    });
+
     const unlockPhone = () => {
       if (!phone || !dial) return;
       const hasDial = !!dial.value;
@@ -105,12 +328,17 @@
     if (country && dial) {
       country.addEventListener("change", () => {
         const match = geo.dials.find((row) => row.name === country.value);
-        if (match) dial.value = match.code;
+        if (match) {
+          dial.value = match.code;
+          if (dialCombo) dialCombo.syncTrigger();
+        }
         unlockPhone();
       });
     }
     if (dial) dial.addEventListener("change", unlockPhone);
     unlockPhone();
+    void titleCombo;
+    void countryCombo;
   })();
 
   document.querySelectorAll(".auth-theme-toggle").forEach((btn) => {

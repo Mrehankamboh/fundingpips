@@ -478,7 +478,7 @@ html.dark .auth-divider::after { background: rgba(251, 252, 255, 0.12); }
 }
 .auth-field input:focus,
 .auth-field select:focus { box-shadow: 0 0 0 3px rgba(0, 34, 90, 0.12); }
-.auth-phone { display: flex; gap: 8px; }
+.auth-phone { display: flex; gap: 8px; align-items: stretch; }
 .auth-phone select {
   width: 58%;
   max-width: 260px;
@@ -486,6 +486,167 @@ html.dark .auth-divider::after { background: rgba(251, 252, 255, 0.12); }
   text-overflow: ellipsis;
 }
 .auth-phone input { flex: 1; min-width: 0; }
+/* Live-style searchable combobox (cmdk / radix popover) */
+.auth-combo {
+  position: relative;
+  width: 100%;
+}
+.auth-phone .auth-combo {
+  width: 160px;
+  max-width: 42%;
+  flex: none;
+}
+.auth-combo-native {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+.auth-combo-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  height: 40px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 0;
+  background: #fff;
+  color: #08090a;
+  font-size: 14px;
+  line-height: 1.25;
+  text-align: left;
+  cursor: pointer;
+  box-shadow: 0 0 0 1px rgba(8, 9, 10, 0.08);
+  outline: none;
+}
+.auth-combo-trigger:focus-visible {
+  box-shadow: 0 0 0 1px rgba(8, 9, 10, 0.12), 0 0 0 3px rgba(0, 34, 90, 0.12);
+}
+.auth-combo-trigger.is-placeholder {
+  color: #626773;
+}
+.auth-combo-trigger-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.auth-combo-chevron {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  opacity: 0.5;
+  color: #08090a;
+}
+.auth-combo-panel {
+  position: absolute;
+  z-index: 50;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  display: none;
+  flex-direction: column;
+  max-height: 336px;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #fff;
+  color: #08090a;
+  box-shadow:
+    0 0 0 1px rgba(8, 9, 10, 0.08),
+    0 1px 2px rgba(0, 0, 0, 0.03),
+    0 18px 36px -18px rgba(0, 0, 0, 0.18);
+}
+.auth-combo.is-open .auth-combo-panel { display: flex; }
+.auth-combo-search {
+  display: flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 12px;
+  border-bottom: 0.8px solid rgba(8, 9, 10, 0.06);
+  flex: none;
+}
+.auth-combo-search input {
+  width: 100%;
+  height: 36px;
+  padding: 12px 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none !important;
+  font-size: 14px;
+  color: #08090a;
+  outline: none;
+}
+.auth-combo-search input::placeholder { color: #8b919c; }
+.auth-combo-list {
+  list-style: none;
+  margin: 0;
+  padding: 4px;
+  max-height: 300px;
+  overflow: auto;
+  flex: 1;
+}
+.auth-combo-option {
+  display: block;
+  width: 100%;
+  min-height: 32px;
+  padding: 6px 8px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #08090a;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.4;
+  text-align: left;
+  cursor: pointer;
+}
+.auth-combo-option:hover,
+.auth-combo-option.is-active {
+  background: #f1f3f5;
+}
+.auth-combo-option.is-selected {
+  background: #f1f3f5;
+}
+.auth-combo-empty {
+  padding: 12px 8px;
+  font-size: 14px;
+  color: #626773;
+}
+html.dark .auth-combo-trigger {
+  background: #12151c;
+  color: #f6f9ff;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+html.dark .auth-combo-trigger.is-placeholder { color: #9aa3b5; }
+html.dark .auth-combo-chevron { color: #f6f9ff; }
+html.dark .auth-combo-panel {
+  background: #161a22;
+  color: #f6f9ff;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    0 18px 36px -18px rgba(0, 0, 0, 0.55);
+}
+html.dark .auth-combo-search {
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+html.dark .auth-combo-search input { color: #f6f9ff; background: transparent; }
+html.dark .auth-combo-option { color: #f6f9ff; }
+html.dark .auth-combo-option:hover,
+html.dark .auth-combo-option.is-active,
+html.dark .auth-combo-option.is-selected {
+  background: rgba(255, 255, 255, 0.08);
+}
 .auth-row {
   display: flex;
   align-items: center;
