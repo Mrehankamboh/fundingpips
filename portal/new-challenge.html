@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>New Challenge | FundingPips</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/portal.css?v=40" />
+  <link rel="stylesheet" href="css/portal.css?v=41" />
 </head>
 <body>
   <div class="app-shell">
@@ -175,18 +175,30 @@
     FPShell.render("New Challenge");
     (function () {
       const PRICES = {
-        "$5K": { Standard: 39, Flex: 35, Pro: 29 },
-        "$10K": { Standard: 72, Flex: 64, Pro: 55 },
-        "$25K": { Standard: 195, Flex: 175, Pro: 145 },
-        "$50K": { Standard: 349, Flex: 299, Pro: 249 },
-        "$100K": { Standard: 652, Flex: 555, Pro: 466 },
-        "$200K": { Standard: 919, Flex: 919, Pro: 919 }
+        "$5K": { Standard: 39, Flex: 35, Pro: 29, Zero: 60, OneStep: 74 },
+        "$10K": { Standard: 72, Flex: 64, Pro: 55, Zero: 88, OneStep: 111 },
+        "$25K": { Standard: 195, Flex: 175, Pro: 145, Zero: 188, OneStep: 255 },
+        "$50K": { Standard: 349, Flex: 299, Pro: 249, Zero: 244, OneStep: 353 },
+        "$100K": { Standard: 652, Flex: 555, Pro: 466, Zero: 444, OneStep: 666 },
+        "$200K": { Standard: 919, Flex: 919, Pro: 919, Zero: 888, OneStep: 0 }
       };
       const state = { type: "2 Step", size: "$100K", plan: "Flex", platform: "MetaTrader 5", swing: false, ctrader: false, qty: 1 };
       const qty = document.querySelector("[data-qty]");
       const money = (n) => "$" + n.toFixed(2);
-      function base() { return PRICES[state.size][state.plan]; }
+      function base() {
+        const row = PRICES[state.size] || {};
+        if (state.type === "Zero") return Number(row.Zero) || 0;
+        if (state.type === "Flex") return Number(row.OneStep) || 0;
+        return Number(row[state.plan]) || 0;
+      }
       function extras() { return (state.ctrader ? 20 : 0) + (state.swing ? base() * 0.1 : 0); }
+      function summaryLabel() {
+        const size = state.size.replace("K", "k");
+        if (state.type === "Zero") return size + " · Zero";
+        if (state.type === "Flex") return size + " · 1 Step Flex";
+        const planName = state.plan === "Flex" ? "Flex" : state.plan;
+        return size + " · 2 Step " + planName;
+      }
       fetch("/api/prices", { credentials: "same-origin" })
         .then((r) => r.json())
         .then((data) => {
@@ -199,8 +211,7 @@
         })
         .catch(() => {});
       function paint() {
-        const planName = state.plan === "Flex" ? "Flex" : state.plan;
-        const label = state.size.replace("K", "k") + " · " + state.type + " " + planName;
+        const label = summaryLabel();
         const total = (base() + extras()) * state.qty;
         document.querySelectorAll("[data-summary-title]").forEach((node) => { node.textContent = label; });
         document.querySelectorAll("[data-summary-price]").forEach((node) => { node.textContent = money(total); });

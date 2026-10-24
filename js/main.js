@@ -64,7 +64,7 @@ function renderPlans() {
         <div class="row"><span class="row-label">Min Days</span><span class="row-val">${p.days}</span></div>
         <div class="row"><span class="row-label">Split</span><span class="row-val">${p.split}</span></div>
       </div>
-      <a class="btn-plan" href="https://app.fundingpips.com/checkout">Buy for $${prices[i]}</a>
+      <a class="btn-plan" href="portal/checkout.html">Buy for $${prices[i]}</a>
     </article>`;
   }).join("");
 
