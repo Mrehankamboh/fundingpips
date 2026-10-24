@@ -55,6 +55,24 @@
     if (utilPages.includes(file)) utilities.classList.add("open");
   }
 
+  function authErrorText(value, fallback) {
+    if (value == null || value === "") return fallback || "Request failed";
+    if (typeof value === "string") return value;
+    if (typeof value === "number" || typeof value === "boolean") return String(value);
+    if (typeof value === "object") {
+      if (typeof value.message === "string" && value.message) return value.message;
+      if (typeof value.error === "string" && value.error) return value.error;
+      if (value.error && value.error !== value) return authErrorText(value.error, fallback);
+      if (typeof value.detail === "string" && value.detail) return value.detail;
+      try {
+        return JSON.stringify(value);
+      } catch (_) {
+        return fallback || "Request failed";
+      }
+    }
+    return fallback || "Request failed";
+  }
+
   async function postAuth(url, payload) {
     const res = await fetch(url, {
       method: "POST",
@@ -69,7 +87,9 @@
       data = {};
     }
     if (!res.ok || data.ok === false) {
-      throw new Error(data.error || "Request failed");
+      throw new Error(
+        authErrorText(data.error != null ? data.error : data, "Request failed (" + res.status + ")")
+      );
     }
     return data;
   }
@@ -122,7 +142,7 @@
         }
         location.href = "dashboard.html";
       } catch (err) {
-        showAuthError(form, err.message || "Something went wrong");
+        showAuthError(form, authErrorText(err && err.message, "Something went wrong"));
         if (btn) btn.disabled = false;
       }
     });

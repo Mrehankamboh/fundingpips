@@ -77,6 +77,10 @@ module.exports = async function handler(req, res) {
       },
     });
   } catch (err) {
-    json(res, 500, { ok: false, error: err.message || "Registration failed" });
+    const message =
+      (err && typeof err.message === "string" && err.message) ||
+      (err && typeof err.detail === "string" && err.detail) ||
+      "Registration failed";
+    json(res, 500, { ok: false, error: message });
   }
 };
