@@ -55,6 +55,7 @@ module.exports = async function handler(req, res) {
       firstName: String(user.first_name || ""),
       email: String(user.email || email),
       token,
+      req,
     });
 
     json(res, 200, {

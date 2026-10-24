@@ -95,6 +95,8 @@ module.exports = async function handler(req, res) {
         await sendWelcomeEmail({
           firstName: user.first_name || profile.firstName,
           email: user.email || profile.email,
+          viaGoogle: true,
+          req,
         });
       } catch (mailErr) {
         console.warn("welcome email failed", mailErr.message || mailErr);

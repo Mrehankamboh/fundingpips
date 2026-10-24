@@ -1,4 +1,9 @@
 {
+  "functions": {
+    "api/index.js": {
+      "maxDuration": 30
+    }
+  },
   "rewrites": [
     { "source": "/portal", "destination": "/portal/dashboard.html" },
     { "source": "/portal/", "destination": "/portal/dashboard.html" },

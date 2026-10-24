@@ -74,15 +74,26 @@ module.exports = async function handler(req, res) {
     const token = await createSession(sql, user.id);
     res.setHeader("Set-Cookie", sessionCookie(token));
 
+    let welcomeEmail = { sent: false, skipped: false };
     try {
-      await sendWelcomeEmail({ firstName: user.first_name, email: user.email });
+      welcomeEmail = await sendWelcomeEmail({
+        firstName: user.first_name,
+        email: user.email,
+        req,
+      });
     } catch (mailErr) {
       console.warn("welcome email failed", mailErr.message || mailErr);
+      welcomeEmail = {
+        sent: false,
+        skipped: false,
+        error: mailErr.message || "send failed",
+      };
     }
 
     json(res, 201, {
       ok: true,
       redirect: "/portal/dashboard.html",
+      welcomeEmail,
       user: {
         id: user.id,
         email: user.email,
