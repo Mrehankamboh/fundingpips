@@ -49,7 +49,7 @@ button { cursor: pointer; }
   font-size: 13px;
   font-weight: 500;
   letter-spacing: 0.01em;
-  line-height: 19.5px;
+  line-height: 20px;
 }
 
 /* Live: sticky -top-10 (‑40px) + translate-y-10 so pill sits ~16px when stuck */
@@ -154,7 +154,7 @@ button { cursor: pointer; }
   gap: 3px;
   min-width: 0;
   justify-content: flex-end;
-  padding: 0 0 0 20px;
+  padding: 0 20px; /* live px-5 */
   box-sizing: border-box;
 }
 .nav-links a, .nav-drop > button {
@@ -165,7 +165,7 @@ button { cursor: pointer; }
   font-size: 13px;
   font-weight: 500;
   letter-spacing: normal;
-  line-height: 24px;
+  line-height: 19.5px; /* live */
   padding: 7px 9px;
   white-space: nowrap;
   border-radius: 4px;
@@ -227,6 +227,24 @@ button { cursor: pointer; }
   font-weight: 500;
   letter-spacing: normal;
   white-space: nowrap;
+}
+
+/* live 2xl nav link cluster: gap-6 px-0 — MUST follow base .nav-links rules */
+@media (min-width: 1536px) {
+  .logo { width: 103px; height: 20px; }
+  .nav-links { gap: 24px; padding: 0; }
+  .nav-links a,
+  .nav-drop > button {
+    padding: 6px;
+    height: 32px;
+    font-weight: 400;
+    line-height: 19.5px;
+  }
+  .nav-faqs { border: 0; box-shadow: none; padding: 6px; height: 32px; }
+  .nav-sep { margin: 0 16px; }
+  .nav-actions { gap: 6px; }
+  .signin { font-size: 14px; padding: 0 16px; height: 34px; }
+  .btn-nav { font-size: 14px; padding: 0 16px; height: 34px; }
 }
 .menu-btn { display: none; width: 42px; height: 42px; border: 0; background: transparent; border-radius: 10px; }
 .menu-btn .menu-bars span,
@@ -1321,7 +1339,7 @@ body { overflow-x: clip; }
   letter-spacing: -0.96px;
   color: var(--navy);
 }
-.pricing .center-sub {
+ .pricing .center-sub {
   margin: 0;
   max-width: none;
   height: 48px;
