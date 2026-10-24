@@ -6,6 +6,7 @@ Thumbs.db
 *.log
 .env
 .env.*
+!.env.example
 _probe*
 _qa*
 _shot*
