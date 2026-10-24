@@ -107,7 +107,7 @@
       );
       if (res.status === 404) {
         msg =
-          "API not found. Open the Vercel site (or run npx vercel dev) — plain static serve has no /api.";
+          "API not found. Run npm start (not npx serve), or open https://fundingpips-xi.vercel.app/portal/register.html";
       }
       throw new Error(msg);
     }

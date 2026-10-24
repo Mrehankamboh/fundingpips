@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "vercel dev",
-    "start": "vercel dev"
+    "dev": "node server.cjs",
+    "start": "node server.cjs",
+    "dev:vercel": "vercel dev",
+    "serve:static": "npx --yes serve -l 3021 ."
   },
   "keywords": [],
   "author": "",
