@@ -15,3 +15,4 @@ _gen*
 !portal/**/*.cjs
 !server.cjs
 .vercel
+.env*
