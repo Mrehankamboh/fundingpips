@@ -2,7 +2,7 @@ const crypto = require("crypto");
 const { getSql } = require("../../lib/db");
 const { ensureSchema } = require("../../lib/schema");
 const { readJson, json, errorMessage } = require("../../lib/auth");
-const { hasMailer, sendPasswordResetEmail } = require("../../lib/mail");
+const { hasMailer, sendPasswordResetEmail, mailConfigError } = require("../../lib/mail");
 
 module.exports = async function handler(req, res) {
   if (req.method !== "POST") {
@@ -62,6 +62,9 @@ module.exports = async function handler(req, res) {
       message: "Check your email for the password reset link.",
     });
   } catch (err) {
-    json(res, 500, { ok: false, error: errorMessage(err, "Could not send reset email") });
+    json(res, 500, {
+      ok: false,
+      error: mailConfigError(err) || errorMessage(err, "Could not send reset email"),
+    });
   }
 };
