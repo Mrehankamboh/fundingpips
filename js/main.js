@@ -397,3 +397,19 @@ renderSizes();
 renderPlans();
 setShow(0);
 document.documentElement.dataset.booted = "1";
+
+fetch("/api/prices", { credentials: "same-origin" })
+  .then((r) => r.json())
+  .then((data) => {
+    if (!data || !data.ok || !data.catalog) return;
+    for (const key of ["zero", "one", "two"]) {
+      if (!data.catalog[key] || !data.catalog[key].price) continue;
+      PRICES[key].price = data.catalog[key].price;
+      if (Array.isArray(data.catalog[key].sizes) && data.catalog[key].sizes.length) {
+        PRICES[key].sizes = data.catalog[key].sizes;
+      }
+    }
+    renderSizes();
+    renderPlans();
+  })
+  .catch(() => {});

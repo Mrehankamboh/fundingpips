@@ -2,6 +2,7 @@ const { getSql } = require("../lib/db");
 const { ensureSchema } = require("../lib/schema");
 const { userFromRequest, readJson, json, errorMessage } = require("../lib/auth");
 const { sendChallengePurchaseEmail } = require("../lib/mail");
+const { planToChallengeName } = require("../lib/catalog");
 
 function cleanText(value, max) {
   return String(value || "")
@@ -55,7 +56,7 @@ module.exports = async function handler(req, res) {
           ? body.accountSize
           : String(body.account_size || "").replace(/[^0-9.]/g, "")
       );
-      const fee = Number(body.fee);
+      let fee = Number(body.fee);
       const quantity = Math.min(4, Math.max(1, Number(body.quantity) || 1));
       const addons = Array.isArray(body.addons)
         ? body.addons.map((item) => cleanText(item, 80)).filter(Boolean).slice(0, 8)
@@ -68,6 +69,19 @@ module.exports = async function handler(req, res) {
       if (!Number.isFinite(accountSize) || accountSize <= 0) {
         json(res, 400, { ok: false, error: "Select an account size" });
         return;
+      }
+      // Portal sends 100 for $100K — normalize to absolute dollars.
+      if (accountSize > 0 && accountSize < 1000) accountSize *= 1000;
+
+      const challengeName = planToChallengeName(evaluationType, plan);
+      const priced = await sql`
+        SELECT price FROM challenge_prices
+        WHERE challenge_name = ${challengeName}
+          AND account_size = ${accountSize}
+        LIMIT 1
+      `;
+      if (priced[0] && Number.isFinite(Number(priced[0].price))) {
+        fee = Number(priced[0].price);
       }
       if (!Number.isFinite(fee) || fee < 0) {
         json(res, 400, { ok: false, error: "Invalid price" });

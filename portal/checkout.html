@@ -187,6 +187,17 @@
       const money = (n) => "$" + n.toFixed(2);
       function base() { return PRICES[state.size][state.plan]; }
       function extras() { return (state.ctrader ? 20 : 0) + (state.swing ? base() * 0.1 : 0); }
+      fetch("/api/prices", { credentials: "same-origin" })
+        .then((r) => r.json())
+        .then((data) => {
+          if (data && data.ok && data.portal) {
+            Object.keys(data.portal).forEach((size) => {
+              PRICES[size] = Object.assign(PRICES[size] || {}, data.portal[size]);
+            });
+            paint();
+          }
+        })
+        .catch(() => {});
       function paint() {
         const planName = state.plan === "Flex" ? "Flex" : state.plan;
         const label = state.size.replace("K", "k") + " · " + state.type + " " + planName;
