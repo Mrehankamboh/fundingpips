@@ -55,10 +55,76 @@
     if (utilPages.includes(file)) utilities.classList.add("open");
   }
 
+  async function postAuth(url, payload) {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      credentials: "same-origin",
+      body: JSON.stringify(payload),
+    });
+    let data = {};
+    try {
+      data = await res.json();
+    } catch (_) {
+      data = {};
+    }
+    if (!res.ok || data.ok === false) {
+      throw new Error(data.error || "Request failed");
+    }
+    return data;
+  }
+
+  function formToObject(form) {
+    const fd = new FormData(form);
+    const out = {};
+    fd.forEach((value, key) => {
+      if (out[key] !== undefined) return;
+      out[key] = typeof value === "string" ? value : String(value);
+    });
+    form.querySelectorAll('input[type="checkbox"]').forEach((el) => {
+      out[el.name] = el.checked;
+    });
+    return out;
+  }
+
+  function showAuthError(form, message) {
+    let el = form.querySelector(".auth-form-error");
+    if (!el) {
+      el = document.createElement("p");
+      el.className = "auth-form-error";
+      el.setAttribute("role", "alert");
+      form.prepend(el);
+    }
+    el.textContent = message;
+  }
+
   document.querySelectorAll("form.auth-form").forEach((form) => {
-    form.addEventListener("submit", (e) => {
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
-      location.href = "dashboard.html";
+      const btn = form.querySelector('button[type="submit"]');
+      const page = (location.pathname.split("/").pop() || "").replace(/\.html$/, "");
+      const isRegister = page === "register" || form.querySelector("#first_name");
+      const isLogin = page === "login" || (!isRegister && form.querySelector("#password"));
+      if (!isRegister && !isLogin) {
+        location.href = "dashboard.html";
+        return;
+      }
+      if (btn) btn.disabled = true;
+      try {
+        const payload = formToObject(form);
+        if (isRegister) {
+          await postAuth("/api/auth/register", payload);
+        } else {
+          await postAuth("/api/auth/login", {
+            email: payload.email,
+            password: payload.password,
+          });
+        }
+        location.href = "dashboard.html";
+      } catch (err) {
+        showAuthError(form, err.message || "Something went wrong");
+        if (btn) btn.disabled = false;
+      }
     });
   });
 

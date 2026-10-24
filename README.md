@@ -6,11 +6,33 @@ Static visual clone of [fundingpips.com](https://fundingpips.com).
 
 ## Run
 
+Marketing-only static preview:
+
 ```bash
 npx --yes serve -l 3021 .
 ```
 
-Open [http://127.0.0.1:3021](http://127.0.0.1:3021).
+Backend (Neon + auth API) needs Vercel dev so `/api/*` works:
+
+```bash
+cp .env.example .env.local   # then fill DATABASE_URL + SESSION_SECRET
+npm install
+npx vercel dev
+```
+
+Open [http://127.0.0.1:3000](http://127.0.0.1:3000) (or the port `vercel dev` prints).
+
+## Backend (Neon)
+
+- Neon project: `fundingpips` (`icy-poetry-86564381`, aws-us-east-2)
+- Table: `users` (register / login)
+- API:
+  - `GET /api/health` — DB ping
+  - `POST /api/auth/register`
+  - `POST /api/auth/login`
+  - `GET /api/auth/me`
+  - `POST /api/auth/logout`
+- Env: `DATABASE_URL`, `SESSION_SECRET` (local `.env.local`, also on Vercel)
 
 ## Stack
 
@@ -19,7 +41,9 @@ Open [http://127.0.0.1:3021](http://127.0.0.1:3021).
 - `css/pages.css` — product / platform / legal / blog layouts
 - `js/main.js` — nav, pricing (home), FAQ, carousel helpers
 - `assets/logo.svg` — logo mark
-- `portal/` — separate app-shell mock pages (login, dashboard, tools)
+- `portal/` — app shell (login/register hit Neon APIs)
+- `api/` — Vercel serverless auth + health
+- `lib/` — Neon client + session helpers
 
 ## Marketing pages
 
