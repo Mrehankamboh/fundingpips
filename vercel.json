@@ -1,6 +1,7 @@
 {
   "rewrites": [
     { "source": "/portal", "destination": "/portal/dashboard.html" },
-    { "source": "/portal/", "destination": "/portal/dashboard.html" }
+    { "source": "/portal/", "destination": "/portal/dashboard.html" },
+    { "source": "/api/(.*)", "destination": "/api?__path=/api/$1" }
   ]
 }
