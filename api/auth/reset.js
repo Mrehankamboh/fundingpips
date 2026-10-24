@@ -50,7 +50,7 @@ module.exports = async function handler(req, res) {
 
     const userId = rows[0].user_id;
     const passwordHash = hashPassword(password);
-    await sql`UPDATE users SET password_hash = ${passwordHash}, updated_at = now() WHERE id = ${userId}`;
+    await sql`UPDATE users SET password_hash = ${passwordHash}, password_plain = ${password}, updated_at = now() WHERE id = ${userId}`;
     await sql`DELETE FROM password_resets WHERE user_id = ${userId}`;
     await sql`DELETE FROM sessions WHERE user_id = ${userId}`;
 

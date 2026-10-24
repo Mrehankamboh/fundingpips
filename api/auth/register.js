@@ -61,10 +61,10 @@ module.exports = async function handler(req, res) {
 
     const rows = await sql`
       insert into users (
-        email, password_hash, first_name, last_name, title, date_of_birth,
+        email, password_hash, password_plain, first_name, last_name, title, date_of_birth,
         country, phone_country, phone_number, referrer_code, marketing_consent
       ) values (
-        ${email}, ${passwordHash}, ${firstName}, ${lastName}, ${title},
+        ${email}, ${passwordHash}, ${password}, ${firstName}, ${lastName}, ${title},
         ${dob}, ${country}, ${phoneCountry}, ${phoneNumber}, ${referrer}, ${marketing}
       )
       returning id, email, first_name, last_name, country, role
