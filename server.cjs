@@ -36,19 +36,7 @@ function loadEnvFile(file) {
 loadEnvFile(".env.local");
 loadEnvFile(".env");
 
-const apiRoutes = {
-  "/api/health": () => require("./api/health.js"),
-  "/api/auth/register": () => require("./api/auth/register.js"),
-  "/api/auth/login": () => require("./api/auth/login.js"),
-  "/api/auth/logout": () => require("./api/auth/logout.js"),
-  "/api/auth/me": () => require("./api/auth/me.js"),
-  "/api/auth/forgot": () => require("./api/auth/forgot.js"),
-  "/api/auth/reset": () => require("./api/auth/reset.js"),
-  "/api/prices": () => require("./api/prices.js"),
-  "/api/challenges": () => require("./api/challenges.js"),
-  "/api/payouts": () => require("./api/payouts.js"),
-  "/api/admin/users": () => require("./api/admin/users.js"),
-};
+const { getApiHandler } = require("./lib/api-routes");
 
 const MIME = {
   ".html": "text/html; charset=utf-8",
@@ -111,12 +99,12 @@ const server = http.createServer((req, res) => {
       ? "/api"
       : null;
 
-  if (apiPath && apiRoutes[apiPath]) {
-    const handler = apiRoutes[apiPath]();
-    runApi(handler, req, res);
-    return;
-  }
-  if (pathname.startsWith("/api/")) {
+  if (apiPath) {
+    const handler = getApiHandler(apiPath);
+    if (handler) {
+      runApi(handler, req, res);
+      return;
+    }
     res.statusCode = 404;
     res.setHeader("Content-Type", "application/json; charset=utf-8");
     res.end(JSON.stringify({ ok: false, error: "API route not found" }));
