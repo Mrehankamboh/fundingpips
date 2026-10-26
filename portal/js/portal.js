@@ -300,6 +300,76 @@
       });
   }
 
+  if (file === "accounts") {
+    const empty = document.querySelector(".accounts-empty");
+    const list = document.querySelector(".accounts-list");
+    const greetName = document.querySelector(".greet-card h2");
+
+    document.addEventListener("fp:user", (ev) => {
+      const u = ev.detail || {};
+      if (greetName) {
+        greetName.textContent = "Hey, " + (u.first_name || u.firstName || "Trader");
+      }
+    });
+
+    function formatSize(n) {
+      const num = Number(n);
+      if (!Number.isFinite(num) || num <= 0) return "—";
+      if (num >= 1000) return "$" + Math.round(num / 1000) + "k";
+      return "$" + num;
+    }
+
+    apiFetch("/api/challenges")
+      .then((data) => {
+        const rows = (data && data.challenges) || [];
+        if (!list) return;
+        if (!rows.length) {
+          if (empty) empty.hidden = false;
+          return;
+        }
+        if (empty) empty.hidden = true;
+        const host = document.createElement("div");
+        host.className = "accounts-challenge-list";
+        host.innerHTML = rows
+          .map((c) => {
+            const title =
+              formatSize(c.accountSize) +
+              " · " +
+              (c.evaluationType || "Challenge") +
+              (c.plan ? " · " + c.plan : "");
+            return (
+              '<article class="account-card" data-id="' +
+              String(c.id) +
+              '">' +
+              "<strong>" +
+              title +
+              "</strong>" +
+              "<span>" +
+              (c.platform || "MetaTrader 5") +
+              " · " +
+              (c.status || "active") +
+              "</span>" +
+              "<span>$" +
+              Number(c.fee || 0).toFixed(2) +
+              " · qty " +
+              Number(c.quantity || 1) +
+              "</span>" +
+              "</article>"
+            );
+          })
+          .join("");
+        if (empty && empty.parentNode) empty.parentNode.insertBefore(host, empty);
+        else list.appendChild(host);
+      })
+      .catch(() => {
+        if (empty) {
+          empty.hidden = false;
+          const strong = empty.querySelector("strong");
+          if (strong) strong.textContent = "Could not load accounts";
+        }
+      });
+  }
+
   (function fillAuthGeo() {
     const geo = window.FPAuthGeo;
     if (!geo) return;

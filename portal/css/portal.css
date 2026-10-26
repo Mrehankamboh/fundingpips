@@ -1075,6 +1075,18 @@ html.dark .auth-combo-option.is-selected {
 .accounts-empty { min-height: 180px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 6px; }
 .accounts-empty strong { font-size: 14px; font-weight: 600; }
 .accounts-empty span { font-size: 14px; color: var(--muted-foreground); }
+.accounts-challenge-list { display: flex; flex-direction: column; gap: 10px; margin: 12px 0 8px; }
+.account-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  border: 1px solid var(--border, #e6e8ee);
+  border-radius: 12px;
+  background: var(--card, #fff);
+}
+.account-card strong { font-size: 15px; font-weight: 650; }
+.account-card span { font-size: 13px; color: var(--muted-foreground, #626773); }
 .detail-empty { width: min(448px, 100%); min-height: 370px; border-radius: 10px; border: 1px dashed rgba(215, 219, 224, 0.9); background: rgba(241, 243, 245, 0.35); padding: 32px; text-align: center; }
 .detail-empty h3 { margin: 0 0 8px; font-size: 18px; font-weight: 600; }
 .detail-empty > p { margin: 0 auto 24px; max-width: 382px; color: var(--muted-foreground); font-size: 14px; }

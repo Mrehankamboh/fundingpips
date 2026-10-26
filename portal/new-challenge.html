@@ -280,7 +280,8 @@
         buy.addEventListener("click", async () => {
           buy.disabled = true;
           try {
-            const size = Number(String(state.size || "").replace(/[^0-9.]/g, ""));
+            const sizeRaw = Number(String(state.size || "").replace(/[^0-9.]/g, ""));
+            const size = sizeRaw > 0 && sizeRaw < 1000 ? sizeRaw * 1000 : sizeRaw;
             const priceText = document.querySelector("[data-summary-price]")?.textContent || "";
             const fee = Number(String(priceText).replace(/[^0-9.]/g, ""));
             const res = await fetch("/api/challenges", {

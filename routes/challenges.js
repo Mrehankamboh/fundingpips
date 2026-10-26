@@ -51,7 +51,7 @@ module.exports = async function handler(req, res) {
       const evaluationType = cleanText(body.evaluationType || body.evaluation_type, 120);
       const platform = cleanText(body.platform, 80) || "MetaTrader 5";
       const plan = cleanText(body.plan, 80) || null;
-      const accountSize = Number(
+      let accountSize = Number(
         body.accountSize != null
           ? body.accountSize
           : String(body.account_size || "").replace(/[^0-9.]/g, "")
