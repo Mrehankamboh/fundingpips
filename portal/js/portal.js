@@ -660,15 +660,73 @@
   if (document.readyState === "complete") boot();
   else document.addEventListener("DOMContentLoaded", boot);
 
-  // Keep original portal layout: only wire chat when #chat + #chat-box already exist.
-  if (
-    document.getElementById("chat") &&
-    document.getElementById("chat-box") &&
-    !document.getElementById("fp-support-chat")
-  ) {
-    const sc = document.createElement("script");
-    sc.id = "fp-support-chat";
-    sc.src = "/js/support-chat.js?v=2";
-    document.body.appendChild(sc);
-  }
+  // Intercom-style support chat on authenticated portal pages.
+  (function mountSupportChat() {
+    const path = (location.pathname || "").toLowerCase();
+    const skip =
+      /login|register|forgot|reset-password|admin\.html|admin-tickets|checkout/.test(path);
+    if (skip || document.getElementById("chat") || !document.querySelector(".app-shell")) return;
+
+    if (!document.getElementById("fp-chat-css")) {
+      const link = document.createElement("link");
+      link.id = "fp-chat-css";
+      link.rel = "stylesheet";
+      link.href = "/css/chat.css?v=1";
+      document.head.appendChild(link);
+    }
+
+    const icon = "/assets/chat-launcher-p.png";
+    const wrap = document.createElement("div");
+    wrap.id = "fp-portal-chat";
+    wrap.innerHTML =
+      '<button class="chat" id="chat" aria-label="Open chat" type="button" aria-expanded="false">' +
+      '<img class="chat-icon-open" src="' + icon + '" width="24" height="24" alt="" />' +
+      '<svg class="chat-icon-close" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+      "</button>" +
+      '<div class="chat-box" id="chat-box" role="dialog" aria-label="Support chat">' +
+      '<div class="chat-home" id="chat-home">' +
+      '<header class="chat-box-head"><div class="chat-box-head-top">' +
+      '<img class="chat-box-logo" src="' + icon + '" width="28" height="28" alt="" />' +
+      '<button type="button" class="chat-close" data-chat-close aria-label="Close chat">×</button></div>' +
+      '<p class="chat-box-hi">Hi there 👋</p><p class="chat-box-sub">How can we help?</p></header>' +
+      '<div class="chat-home-body">' +
+      '<button type="button" class="chat-home-card" id="chat-ask"><span>Ask a question</span>' +
+      '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h12M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>' +
+      '<a class="chat-home-card" href="https://help.fundingpips.com" target="_blank" rel="noopener noreferrer"><span>FAQ\'s</span>' +
+      '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M14 5h5v5M19 5l-9 9M10 5H5v14h14v-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>' +
+      "</div>" +
+      '<nav class="chat-tabs" aria-label="Chat sections">' +
+      '<button type="button" class="chat-tab on" data-tab="home" id="chat-tab-home">' +
+      '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1v-9.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg><span>Home</span></button>' +
+      '<button type="button" class="chat-tab" data-tab="messages" id="chat-tab-messages">' +
+      '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 6.5A2.5 2.5 0 0 1 7.5 4h9A2.5 2.5 0 0 1 19 6.5v7a2.5 2.5 0 0 1-2.5 2.5H11l-4 3v-3H7.5A2.5 2.5 0 0 1 5 13.5v-7Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg><span>Messages</span></button>' +
+      "</nav></div>" +
+      '<div class="chat-messages" id="chat-messages" hidden>' +
+      '<header class="chat-thread-head">' +
+      '<button type="button" class="chat-back" id="chat-back" aria-label="Back"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>' +
+      '<img class="chat-thread-logo" src="' + icon + '" width="28" height="28" alt="" />' +
+      '<div class="chat-thread-meta"><strong>Alice</strong><span>The team can also help</span></div>' +
+      '<button type="button" class="chat-more" id="chat-more" aria-label="Conversation options" aria-haspopup="menu" aria-expanded="false">' +
+      '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="3.5" cy="8" r="1.35" fill="currentColor"/><circle cx="8" cy="8" r="1.35" fill="currentColor"/><circle cx="12.5" cy="8" r="1.35" fill="currentColor"/></svg></button>' +
+      '<button type="button" class="chat-close chat-close--dark" data-chat-close aria-label="Close chat">×</button>' +
+      '<div class="chat-more-menu" id="chat-more-menu" role="menu" hidden>' +
+      '<button type="button" class="chat-more-item" id="chat-expand" role="menuitem"><span>Expand window</span>' +
+      '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M9.5 2.5h4v4M13.5 2.5 8 8M6.5 13.5h-4v-4M2.5 13.5 8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>' +
+      "</div></header>" +
+      '<div class="chat-log" id="chat-log"></div>' +
+      '<form class="chat-composer" id="chat-form">' +
+      '<input type="hidden" name="name" value="" /><input type="hidden" name="subject" value="Support request" />' +
+      '<button type="button" class="chat-attach" aria-label="Attach" tabindex="-1"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M16.5 7.5 9.2 14.8a3 3 0 1 1-4.2-4.2l8.5-8.5a5 5 0 0 1 7.1 7.1l-9.2 9.2a7 7 0 0 1-9.9-9.9l8.1-8.1" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>' +
+      '<input class="chat-composer-input" name="message" type="text" placeholder="Message..." autocomplete="off" required />' +
+      '<button class="chat-composer-send" type="submit" aria-label="Send"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 19V5M12 5l-6 6M12 5l6 6" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>' +
+      "</form></div></div>";
+    document.body.appendChild(wrap);
+
+    if (!document.getElementById("fp-support-chat")) {
+      const sc = document.createElement("script");
+      sc.id = "fp-support-chat";
+      sc.src = "/js/support-chat.js?v=5";
+      document.body.appendChild(sc);
+    }
+  })();
 })();

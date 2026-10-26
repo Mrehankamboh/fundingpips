@@ -24,8 +24,8 @@
         <div class="app-content">
           <div class="admin-wrap">
             <h1>Users</h1>
-            <p class="lead">Forge-style directory: signups, challenges, spend. Â· <a href="admin-tickets.html">Support tickets</a></p>
-            <p id="admin-status">Loadingâ€¦</p>
+            <p class="lead">Forge-style directory: signups, challenges, spend. · <a href="admin-tickets.html">Support tickets</a></p>
+            <p id="admin-status">Loading…</p>
             <div style="overflow:auto">
               <table>
                 <thead>
@@ -42,7 +42,7 @@
     </div>
   </div>
   <script src="js/shell.js?v=7"></script>
-  <script src="js/portal.js?v=13"></script>
+  <script src="js/portal.js?v=17"></script>
   <script>
     document.addEventListener("fp:user", async (ev) => {
       const status = document.getElementById("admin-status");
@@ -65,7 +65,7 @@
               "</td><td>" +
               u.email +
               "</td><td>" +
-              (u.country || "â€”") +
+              (u.country || "—") +
               "</td><td>" +
               u.role +
               "</td><td>" +

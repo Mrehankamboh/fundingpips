@@ -2,7 +2,7 @@ window.onerror = (m, s, l) => { document.documentElement.dataset.err = String(m)
 if (!document.getElementById("fp-support-chat")) {
   const sc = document.createElement("script");
   sc.id = "fp-support-chat";
-  sc.src = "js/support-chat.js?v=3";
+  sc.src = "js/support-chat.js?v=5";
   document.body.appendChild(sc);
 }
 const PRICES = {

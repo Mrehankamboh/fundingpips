@@ -28,13 +28,13 @@
 </head>
 <body>
   <div class="app-shell">
-    <div class="app-banner" role="banner">Admin Â· Support</div>
+    <div class="app-banner" role="banner">Admin · Support</div>
     <div class="app-body">
       <aside class="app-rail" id="app-rail"></aside>
       <div class="app-main">
         <header class="app-topbar" id="app-topbar"></header>
         <div class="app-content">
-          <p id="desk-status" style="max-width:1100px;margin:16px auto 0;padding:0 16px">Loadingâ€¦</p>
+          <p id="desk-status" style="max-width:1100px;margin:16px auto 0;padding:0 16px">Loading…</p>
           <div class="desk" id="desk" hidden>
             <section class="desk-list">
               <h2>Tickets</h2>
@@ -45,7 +45,7 @@
               <div class="desk-meta" id="thread-meta"></div>
               <div class="msgs" id="msgs"></div>
               <form class="reply" id="reply-form">
-                <textarea id="reply-body" rows="3" placeholder="Write an admin replyâ€¦" required></textarea>
+                <textarea id="reply-body" rows="3" placeholder="Write an admin reply…" required></textarea>
                 <select id="reply-status">
                   <option value="open">Open</option>
                   <option value="in_progress">In progress</option>
@@ -61,7 +61,7 @@
     </div>
   </div>
   <script src="js/shell.js?v=7"></script>
-  <script src="js/portal.js?v=14"></script>
+  <script src="js/portal.js?v=17"></script>
   <script>
     (function () {
       const statusEl = document.getElementById("desk-status");
@@ -91,11 +91,11 @@
               t.id +
               '"><strong>' +
               (t.subject || "Support") +
-              " Â· " +
+              " · " +
               (t.status || "open") +
               "</strong><span>" +
               (t.name || "Visitor") +
-              (t.email ? " Â· " + t.email : "") +
+              (t.email ? " · " + t.email : "") +
               "<br>" +
               (t.lastAuthor === "admin" ? "You: " : "") +
               (t.lastMessage || "No messages") +
@@ -110,8 +110,8 @@
         titleEl.textContent = (ticket && ticket.subject) || "Ticket";
         metaEl.textContent = ticket
           ? (ticket.name || "Visitor") +
-            (ticket.email ? " Â· " + ticket.email : "") +
-            " Â· " +
+            (ticket.email ? " · " + ticket.email : "") +
+            " · " +
             (ticket.status || "open")
           : "";
         if (ticket) statusSel.value = ticket.status || "open";
