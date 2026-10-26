@@ -1,11 +1,9 @@
 window.onerror = (m, s, l) => { document.documentElement.dataset.err = String(m) + " @" + l; };
-document.getElementById("chat")?.remove();
-document.getElementById("chat-box")?.remove();
-if (!document.getElementById("ze-snippet")) {
-  const ze = document.createElement("script");
-  ze.id = "ze-snippet";
-  ze.src = "https://static.zdassets.com/ekr/snippet.js?key=d5c44381-8faa-4c43-9539-b748d0268b75";
-  document.body.appendChild(ze);
+if (!document.getElementById("fp-support-chat")) {
+  const sc = document.createElement("script");
+  sc.id = "fp-support-chat";
+  sc.src = "js/support-chat.js?v=3";
+  document.body.appendChild(sc);
 }
 const PRICES = {
   zero: { sizes: ["$5K", "$10K", "$25K", "$50K", "$100K", "$200K"], price: { "$5K": [60], "$10K": [88], "$25K": [188], "$50K": [244], "$100K": [444], "$200K": [888] } },
@@ -363,19 +361,7 @@ const roiObs = new IntersectionObserver((entries) => {
 }, { threshold: 0.4 });
 roiObs.observe(roi);
 
-const chatBtn = qs("#chat");
-const chatBox = qs("#chat-box");
-const toggleChat = (force) => {
-  const open = typeof force === "boolean" ? force : !chatBox.classList.contains("open");
-  chatBox.classList.toggle("open", open);
-  chatBtn.classList.toggle("open", open);
-  chatBtn.setAttribute("aria-expanded", open ? "true" : "false");
-};
-if (chatBtn && chatBox) {
-  chatBtn.addEventListener("click", () => toggleChat());
-  const chatClose = qs("#chat-close");
-  if (chatClose) chatClose.addEventListener("click", () => toggleChat(false));
-}
+/* Support chat UI is handled by js/support-chat.js */
 
 const cashCard = qs("#cash-card");
 if (cashCard) {

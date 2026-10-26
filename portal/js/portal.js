@@ -660,10 +660,15 @@
   if (document.readyState === "complete") boot();
   else document.addEventListener("DOMContentLoaded", boot);
 
-  if (!document.getElementById("ze-snippet")) {
-    const ze = document.createElement("script");
-    ze.id = "ze-snippet";
-    ze.src = "https://static.zdassets.com/ekr/snippet.js?key=d202d111-fc9c-4047-8d94-973d2984cee3";
-    document.body.appendChild(ze);
+  // Keep original portal layout: only wire chat when #chat + #chat-box already exist.
+  if (
+    document.getElementById("chat") &&
+    document.getElementById("chat-box") &&
+    !document.getElementById("fp-support-chat")
+  ) {
+    const sc = document.createElement("script");
+    sc.id = "fp-support-chat";
+    sc.src = "/js/support-chat.js?v=2";
+    document.body.appendChild(sc);
   }
 })();

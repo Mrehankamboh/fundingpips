@@ -158,7 +158,7 @@
               <div class="nc-qty-ctrl"><span>Max 4</span><span data-qty>1</span><button type="button" data-qty-dec aria-label="Decrease quantity">−</button></div>
             </div>
             <button class="nc-cart" type="button">Add to cart</button>
-            <a class="nc-buy" href="checkout.html">Buy now</a>
+            <button class="nc-buy" type="button" id="nc-buy">Buy now</button>
 
             <div class="nc-perks">
               <div><strong>Instant access</strong><p>Get your account and start trading as soon as your purchase is complete.</p></div>
@@ -275,7 +275,53 @@
         state.qty = Math.max(1, state.qty - 1);
         paint();
       });
+      const buy = document.getElementById("nc-buy");
+      if (buy) {
+        buy.addEventListener("click", async () => {
+          buy.disabled = true;
+          try {
+            const sizeRaw = Number(String(state.size || "").replace(/[^0-9.]/g, ""));
+            const size = sizeRaw > 0 && sizeRaw < 1000 ? sizeRaw * 1000 : sizeRaw;
+            const priceText = document.querySelector("[data-summary-price]")?.textContent || "";
+            const fee = Number(String(priceText).replace(/[^0-9.]/g, ""));
+            let evaluationType = "2 Step";
+            let plan = state.plan || null;
+            if (state.type === "Zero") {
+              evaluationType = "Zero";
+              plan = null;
+            } else if (state.type === "Flex") {
+              evaluationType = "1 Step Flex";
+              plan = "Flex";
+            }
+            const res = await fetch("/api/challenges", {
+              method: "POST",
+              credentials: "same-origin",
+              headers: { "Content-Type": "application/json", Accept: "application/json" },
+              body: JSON.stringify({
+                evaluationType,
+                accountSize: size,
+                platform: state.platform || "MetaTrader 5",
+                plan,
+                fee,
+                quantity: state.qty || 1,
+                addons: [
+                  plan ? String(plan) : null,
+                  state.swing ? "Swing" : null,
+                ].filter(Boolean),
+              }),
+            });
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok || data.ok === false) {
+              throw new Error(data.error || "Could not create challenge");
+            }
+            location.href = data.redirect || "accounts.html";
+          } catch (err) {
+            alert(err.message || "Could not create challenge");
+            buy.disabled = false;
+          }
+        });
+      }
     })();</script>
-  <script src="js/portal.js?v=13"></script>
+  <script src="js/portal.js?v=14"></script>
 </body>
 </html>
